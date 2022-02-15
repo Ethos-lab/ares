@@ -1,12 +1,15 @@
 from art.attacks.evasion import ProjectedGradientDescentPyTorch
+from art.estimators.classification import PyTorchClassifier
 import torch
 import torch.nn as nn
 from attacks import *
 
 
 class AttackerAgent:
-    def __init__(self, device: torch.device):
+    def __init__(self, model: PyTorchClassifier, attack_type: Attack, device: torch.device):
         self.num_steps = 0
+        self.model = model
+        self.attack_type = attack_type
         self.device = device
 
     def generate(
@@ -18,5 +21,6 @@ class AttackerAgent:
         self.num_steps += 1
         return image_adv
 
-    def attack(model: nn.Module, attack: Attack):
-        pass
+    def attack(self, attack: Attack, **kwargs):
+        wrapped_art_model = self.attack_type(self.model)
+        return wrapped_art_model
