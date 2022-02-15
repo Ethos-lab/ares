@@ -1,6 +1,7 @@
 from art.attacks.evasion import ProjectedGradientDescentPyTorch
 import torch
 import torch.nn as nn
+from attacks import *
 
 
 class AttackerAgent:
@@ -16,3 +17,6 @@ class AttackerAgent:
         image_adv = torch.tensor(bx, device=self.device)
         self.num_steps += 1
         return image_adv
+
+    def attack(model: nn.Module, attack: Attack):
+        pass
