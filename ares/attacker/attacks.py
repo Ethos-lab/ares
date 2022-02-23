@@ -6,7 +6,7 @@ from art.attacks.evasion import (
     AutoAttack
 )
 
-class Attack:
+class Attack(ABC):
     def __init__(self) -> None:
         pass
 

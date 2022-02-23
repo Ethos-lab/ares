@@ -1,0 +1,71 @@
+{
+    "attacker": [
+        {
+            "loss": "torch.nn.CrossEntropyLoss",
+            "input_shape": [3, 32, 32],
+            "num_classes": 10,
+            "clip_values": [0, 1],
+            "pgd_attack_params": {
+                "norm": "np.inf",
+                "eps": 0.03137254901,
+                "eps_step": 0.00784313725,
+                "num_random_init": 0,
+                "max_iter": 1,
+                "targeted": false,
+                "batch_size": 1,
+                "verbose": false
+            },
+            "autopgd_attack_params": {
+                "norm": "np.inf",
+                "eps": 0.03137254901,
+                "eps_step": 0.00784313725,
+                "num_random_init": 0,
+                "max_iter": 1,
+                "targeted": false,
+                "batch_size": 1,
+                "verbose": false
+            },
+            "autoattack_attack_params": {
+                "norm": "np.inf",
+                "eps": 0.03137254901,
+                "eps_step": 0.00784313725,
+                "num_random_init": 0,
+                "max_iter": 1,
+                "targeted": false,
+                "batch_size": 1,
+                "verbose": false
+            }
+        }
+    ],
+    "defender": [
+        {
+            "loss": "torch.nn.CrossEntropyLoss",
+            "input_shape": [3, 32, 32],
+            "num_classes": 10,
+            "clip_values": [0, 1],
+            "pgd_defense_params": {
+                "norm": "np.inf",
+                "eps": 0.03137254901,
+                "eps_step": 0.00784313725,
+                "num_random_init": 0,
+                "max_iter": 1,
+                "targeted": false,
+                "batch_size": 1,
+                "verbose": false
+            }
+        }
+    ],
+    "env": {
+        "num_agents": 2,
+        "num_episodes": 50,
+        "reward": 0,
+        "dataroot": "./downloads/",
+        "num_trials": 50
+    },
+    "executor": {
+
+    },
+    "scenario": {
+        "kwargs": {}
+    }
+}
