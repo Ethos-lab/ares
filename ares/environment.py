@@ -10,7 +10,7 @@ from ares.defender import DefenderAgent
 class AresEnv(gym.Env):
     metadata = {"render.modes": ["console"]}
 
-    def __init__(self, attacker: AttackerAgent, defender: DefenderAgent, max_rounds=10):
+    def __init__(self, attacker: AttackerAgent, defender: DefenderAgent, max_rounds):
         self.n_agents = 2
         self.attacker = attacker
         self.defender = defender
@@ -19,7 +19,7 @@ class AresEnv(gym.Env):
         self.step_count = 0
         self.reward = 0
         self.episode_rewards = []
-        self.action_space = spaces.Discrete(2)
+        self.action_space = spaces.Discrete(1)
         self.observation_space = spaces.Dict({})
 
     def reset(self) -> dict:
@@ -34,7 +34,7 @@ class AresEnv(gym.Env):
         self.step_count += 1
         observation = {}
         reward = 0
-        info = {}
+        info = {self.action_space.sample()}
         return observation, reward, self.done, info
 
     def render(self, mode: str) -> None:

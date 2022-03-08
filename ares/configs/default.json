@@ -1,32 +1,10 @@
 {
     "attacker": [
         {
-            "loss": "torch.nn.CrossEntropyLoss",
-            "input_shape": [3, 32, 32],
-            "num_classes": 10,
-            "clip_values": [0, 1],
-            "pgd_attack_params": {
-                "norm": "np.inf",
-                "eps": 0.03137254901,
-                "eps_step": 0.00784313725,
-                "num_random_init": 0,
-                "max_iter": 1,
-                "targeted": false,
-                "batch_size": 1,
-                "verbose": false
-            },
-            "autopgd_attack_params": {
-                "norm": "np.inf",
-                "eps": 0.03137254901,
-                "eps_step": 0.00784313725,
-                "num_random_init": 0,
-                "max_iter": 1,
-                "targeted": false,
-                "batch_size": 1,
-                "verbose": false
-            },
-            "autoattack_attack_params": {
-                "norm": "np.inf",
+            "attack_type": "evasion",
+            "attack_name": "ProjectedGradientDescent",
+            "attack_params": {
+                "norm": "inf",
                 "eps": 0.03137254901,
                 "eps_step": 0.00784313725,
                 "num_random_init": 0,
@@ -39,33 +17,27 @@
     ],
     "defender": [
         {
-            "loss": "torch.nn.CrossEntropyLoss",
-            "input_shape": [3, 32, 32],
-            "num_classes": 10,
-            "clip_values": [0, 1],
-            "pgd_defense_params": {
-                "norm": "np.inf",
-                "eps": 0.03137254901,
-                "eps_step": 0.00784313725,
-                "num_random_init": 0,
-                "max_iter": 1,
-                "targeted": false,
-                "batch_size": 1,
-                "verbose": false
+            "model_file": "./downloads/models/resnet.py",
+            "model_name": "resnet18_nat",
+            "model_params": {
+                "num_classes": 10
+            },
+            "model_state": "./downloads/state_dicts/resnet18_nat.pth",
+            "classifier_type": "PyTorchClassifier",
+            "classifier_params": {
+                "loss": "torch.nn.CrossEntropyLoss",
+                "input_shape": [3, 32, 32],
+                "nb_classes": 10,
+                "clip_values": [0, 1]
             }
         }
     ],
-    "env": {
+    "scenario": {
+        "threat_model": "white_box",
         "num_agents": 2,
         "num_episodes": 50,
         "reward": 0,
         "dataroot": "./downloads/",
         "num_trials": 50
-    },
-    "executor": {
-
-    },
-    "scenario": {
-        "kwargs": {}
     }
 }

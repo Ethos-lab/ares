@@ -1,10 +1,8 @@
 from abc import ABC, abstractmethod
+
+from art.attacks.evasion import AutoAttack, AutoProjectedGradientDescent, ProjectedGradientDescentPyTorch
 from art.estimators.classification import PyTorchClassifier
-from art.attacks.evasion import (
-    ProjectedGradientDescentPyTorch, 
-    AutoProjectedGradientDescent, 
-    AutoAttack
-)
+
 
 class Attack(ABC):
     def __init__(self) -> None:
