@@ -1,9 +1,9 @@
 from typing import List, Optional
 
 from art.estimators.classification import PyTorchClassifier
+from gym import spaces
 import numpy as np
 import torch
-from gym import spaces
 
 
 class DefenderAgent:

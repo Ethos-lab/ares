@@ -51,9 +51,10 @@
     "scenario": {
         "threat_model": "white_box",
         "num_agents": 2,
-        "num_episodes": 50,
         "reward": 0,
         "dataroot": "./downloads",
+        "random_noise": true,
+        "num_episodes": 50,
         "num_trials": 50
     }
 }

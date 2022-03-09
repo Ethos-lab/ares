@@ -1,50 +1,54 @@
 import gym
 import numpy as np
 import torch
-import torch.nn as nn
-# import torchvision
 
-from ares import attacker, defender, utils
+from ares import utils
 
 
-def main(args):
-    # device = torch.device(f"cuda:{args.gpu}" if torch.cuda.is_available() else "cpu")
-    
-    config_path = './ares/configs/default.json'
+def main():
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    # load config file
+    config_path = "./ares/configs/default.json"
     config = utils.get_config(config_path)
 
-    device = torch.device('cpu')
-
+    # create environment
     defender_agent = utils.get_defender_agent(config, device)
     attacker_agent = utils.get_attacker_agent(config)
+    execution_scenario = utils.get_execution_scenario(config)
+    env = gym.make("AresEnv-v0", attacker=attacker_agent, defender=defender_agent, scenario=execution_scenario)
 
-    print(defender_agent)
-    print(attacker_agent)
+    counts = []
+    for trial in range(execution_scenario.num_trials):
+        print(f"=== Trial {trial + 1} ===")
 
-    dataset_path = './downloads'
-    dataset = utils.load_dataset(dataset_path)
+        # initialize environment
+        observation = env.reset()
+        image = observation["image"]
+        label = observation["label"]
+        done = False
 
-    image, label = utils.get_valid_sample(dataset, defender_agent.classifiers)
+        # run simulation
+        while not done:
+            action = {
+                "image": image,
+                "label": label,
+            }
+            observation, reward, done, info = env.step(action)
+            image = observation["image_adv"]
+            pred = observation["pred"]
+            winner = observation["winner"]
+            episode = info["step_count"]
 
-    env = gym.make("AresEnv-v0", attacker=attacker_agent, defender=defender_agent, max_rounds=5)
-    print(env.reset())
+            print(f"Episode {episode:2}: ({label[0]} | {pred[0]})")
 
-    for i in range(10):
-        action = {
-            'image': image,
-            'label': label,
-        }
-        observation, reward, done, info = env.step(action)
-        print(observation['image'].shape)
-        print(observation['image_adv'].shape)
-        print(observation['label'])
-        print(observation['pred'])
-        print(observation['winner'])
-        print(done)
+        print(f"Game end: {winner} wins")
+        counts.append(episode)
 
-        image = observation['image_adv']
+    # scenario stats
+    print(counts)
+    print(f"mean: {np.mean(counts)}, stddev: {np.std(counts):.3f}, median: {np.median(counts)}")
 
 
 if __name__ == "__main__":
-    args = None
-    main(args)
+    main()
