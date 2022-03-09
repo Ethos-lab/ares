@@ -2,6 +2,7 @@ from typing import Tuple
 
 import gym
 from gym import spaces
+import torch
 
 from ares.attacker import AttackerAgent
 from ares.defender import DefenderAgent
@@ -34,7 +35,43 @@ class AresEnv(gym.Env):
         self.step_count += 1
         observation = {}
         reward = 0
-        info = {self.action_space.sample()}
+        info = {}
+
+        image = action['image']
+        label = action['label']
+
+        # defender turn
+        self.defender.change_classifier()
+        classifier = self.defender.get_classifier()
+
+        # attacker turn
+        image_adv = self.attacker.attack(classifier, image, label)
+
+        # check winner of round
+        out = classifier.predict(image_adv)
+        pred = classifier.reduce_labels(out)
+
+        winner = None
+        if pred != label:
+            self.done = True
+            winner = 'attacker'
+        elif self.step_count >= self.max_rounds:
+            self.done = True
+            winner = 'defender'
+        
+        observation = {
+            'image': image,
+            'label': label,
+            'image_adv': image_adv,
+            'pred': pred,
+            'winner': winner,
+        }
+
+        info = {
+            'description': '',
+            'step_count': self.step_count,
+        }
+
         return observation, reward, self.done, info
 
     def render(self, mode: str) -> None:

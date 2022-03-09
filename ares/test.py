@@ -1,6 +1,4 @@
-import json
-
-# import gym
+import gym
 import numpy as np
 import torch
 import torch.nn as nn
@@ -11,44 +9,40 @@ from ares import attacker, defender, utils
 
 def main(args):
     # device = torch.device(f"cuda:{args.gpu}" if torch.cuda.is_available() else "cpu")
-
-    # attacker_agent = attacker.AttackerAgent(device)
-    # defender_agent = defender.DefenderAgent(models, device)
-    # attacker_agent = None
-    # defender_agent = None
-    # env = gym.make("AresEnv-v0", attacker=attacker_agent, defender=defender_agent)
-    # print(env.reset())
-    # print(env.step({}))
-    # print(env.step({}))
-    # print(env.step({}))
-    with open('./ares/configs/default.json', 'r') as f:
-        config = json.load(f)
+    
+    config_path = './ares/configs/default.json'
+    config = utils.get_config(config_path)
 
     device = torch.device('cpu')
 
-    model_file = config['defender'][0]['model_file']
-    model_name = config['defender'][0]['model_name']
-    model_params = config['defender'][0]['model_params']
-    model_state = config['defender'][0]['model_state']
-    classifier_type = config['defender'][0]['classifier_type']
-    classifier_params = config['defender'][0]['classifier_params']
-    classifier_params['loss'] = nn.CrossEntropyLoss()
-    model = utils.load_torch_model(model_file, model_name, model_params, model_state, device)
-    classifier = utils.get_classifier(model, classifier_type, classifier_params, device)
-    
-    # defender_agent = defender.DefenderAgent([classifier], [1], device)
-    # print(defender_agent.change_model())
-    # print(defender_agent.get_model())
+    defender_agent = utils.get_defender_agent(config, device)
+    attacker_agent = utils.get_attacker_agent(config)
 
-    attack_type = config['attacker'][0]['attack_type']
-    attack_name = config['attacker'][0]['attack_name']
-    attack_params = config['attacker'][0]['attack_params']
+    print(defender_agent)
+    print(attacker_agent)
 
-    attack = utils.get_evasion_attack(attack_name, classifier, attack_params)
-    print(attack)
+    dataset_path = './downloads'
+    dataset = utils.load_dataset(dataset_path)
 
-    bx = attack.generate(np.random.rand(1, 3, 32, 32).astype(np.float32), np.array([2]))
-    print(bx.shape)
+    image, label = utils.get_valid_sample(dataset, defender_agent.classifiers)
+
+    env = gym.make("AresEnv-v0", attacker=attacker_agent, defender=defender_agent, max_rounds=5)
+    print(env.reset())
+
+    for i in range(10):
+        action = {
+            'image': image,
+            'label': label,
+        }
+        observation, reward, done, info = env.step(action)
+        print(observation['image'].shape)
+        print(observation['image_adv'].shape)
+        print(observation['label'])
+        print(observation['pred'])
+        print(observation['winner'])
+        print(done)
+
+        image = observation['image_adv']
 
 
 if __name__ == "__main__":
