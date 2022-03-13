@@ -55,6 +55,6 @@
         "dataroot": "./downloads",
         "random_noise": true,
         "num_episodes": 50,
-        "num_trials": 50
+        "max_rounds": 50
     }
 }

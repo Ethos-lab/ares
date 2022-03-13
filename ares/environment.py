@@ -27,7 +27,6 @@ class AresEnv(gym.Env):
         self.done = False
         self.step_count = 0
         self.reward = 0
-        self.max_rounds = self.scenario.num_episodes
 
         image, label = self.scenario.get_valid_sample(self.defender.classifiers)
         observation = {
@@ -57,7 +56,7 @@ class AresEnv(gym.Env):
         if pred != label:
             self.done = True
             winner = "attacker"
-        elif self.step_count >= self.max_rounds:
+        elif self.step_count >= self.scenario.max_rounds:
             self.done = True
             winner = "defender"
 
@@ -73,6 +72,8 @@ class AresEnv(gym.Env):
             "description": "",
             "step_count": self.step_count,
         }
+
+        self.reward = self.step_count
 
         return observation, self.reward, self.done, info
 
