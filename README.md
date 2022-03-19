@@ -37,6 +37,8 @@ config = utils.get_config('/path/to/config.json')
 One can start by initializing the attacker, defender, and scenario first.
 
 ```python
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 # create components
 defender_agent = utils.get_defender_agent(config, device)
 attacker_agent = utils.get_attacker_agent(config)
