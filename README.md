@@ -28,7 +28,11 @@ First, clone this repository and cd into it. Then perform the following (we assu
 ### Configs
 
 ### Execution
-Based on our discussion in the [structure section](#Structure), working with Ares is very simple. We utilize the config example as detailed in the [configs](#Configs) section
+Based on our discussion in the [structure section](#Structure), working with Ares is very simple. We utilize the config example as detailed in the [configs](#Configs) section. Extracting the config file for use in Ares uses this line of code
+
+```python
+config = utils.get_config('/path/to/config.json')
+```
 
 One can start by initializing the attacker, defender, and scenario first.
 
