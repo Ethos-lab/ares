@@ -43,7 +43,12 @@ Next, we create the environment that houses these components
 
 ```python
 # create environment
-env = gym.make('AresEnv-v0', attacker=attacker_agent, defender=defender_agent, scenario=execution_scenario)
+env = gym.make(
+    'AresEnv-v0', 
+    attacker=attacker_agent, 
+    defender=defender_agent, 
+    scenario=execution_scenario
+)
 ```
 
 We can run the experiment for the specified number of trials (which can be set in the config file) and record the number of rounds until the attacker wins for each trial.
