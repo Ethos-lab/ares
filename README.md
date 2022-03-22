@@ -1,34 +1,77 @@
 # Ares
+
+Ares is a system-oriented wargame framework for adversarial ML used to simulate interactions between an attacker and defender in a real-time battle.
+
 ## Table of Contents
-1. [Requirements](#Requirements)
-2. [Installation](#Installation)
-3. [Structure](#Structure)
-4. [Configs](#Configs)
-5. [Execution](#Execution)
 
-### Requirements
-Ares uses the following dependencies
+- [Ares](#ares)
+  - [Table of Contents](#table-of-contents)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+  - [Structure](#structure)
+    - [Attacker Agent](#attacker-agent)
+    - [Defender Agent](#defender-agent)
+    - [Evaluation Scenario](#evaluation-scenario)
+  - [Config File](#config-file)
+  - [Usage](#usage)
 
-- PyTorch
-- OpenAI Gym
-- IBM's Adversarial Robustness Toolbox
-- Numpy
-- Scipy
-- Pillow
+## Requirements
 
-### Installation
-First, clone this repository and cd into it. Then perform the following (we assume you have pip and virtualenv installed)
+Ares uses the following dependencies:
 
-1. `virtualenv venv`
-2. `source venv/bin/activate`
-3. `pip install -e .`
+- Python 3.6+
 
-### Structure
+## Installation
 
-### Configs
+First, clone this repository and cd into it.
 
-### Execution
-Based on our discussion in the [structure section](#Structure), working with Ares is very simple. We utilize the config example as detailed in the [configs](#Configs) section. Extracting the config file for use in Ares uses this line of code
+```bash
+git clone https://github.com/Ethos-lab/ares
+cd ares
+```
+
+(Optional) Create a new Python virtual environment and activate it.
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Install the package dependencies into the virtual environment.
+
+```bash
+pip install -e .
+```
+
+## Structure
+
+The framework is structured into three components:
+
+- Attacker Agent
+- Defender Agent
+- Evaluation Scenario
+
+Each component must be instantiated to create the reinforcement learning environment used to run Ares.
+
+### Attacker Agent
+
+The attacker agent (or simply attacker) is the adversary whose goal is to cause the defender to misclassify.
+
+### Defender Agent
+
+The defender agent (or simply defender) is the agent who needs to continuously classify the input example given by the attacker with the goal being to last as long as possible without misclassifying.
+
+### Evaluation Scenario
+
+The evaluation scenario (or simply scenario) defines the main parameters for the simulation.
+
+## Config File
+
+Ares uses a JSON configuration file to specify the parameters used to run the simulation.
+
+## Usage
+
+Based on our discussion in the [structure section](#structure), working with Ares is very simple. We utilize the config example as detailed in the [config file](#config-file) section. Extracting the config file for use in Ares uses this line of code
 
 ```python
 config = utils.get_config('/path/to/config.json')
