@@ -67,13 +67,15 @@ The evaluation scenario (or simply scenario) defines the main parameters for the
 
 ## Config File
 
-Ares uses a JSON configuration file to specify the parameters used to run the simulation.
+Ares uses a JSON configuration file to specify the parameters used to run the simulation. This JSON file has a field to instantiate each of the three components: attacker, defender, and scenario. An example configuration file is available in `ares/configs/default.json`.
 
 ## Usage
 
 Based on our discussion in the [structure section](#structure), working with Ares is very simple. We utilize the config example as detailed in the [config file](#config-file) section. Extracting the config file for use in Ares uses this line of code
 
 ```python
+from ares import utils
+
 config = utils.get_config('/path/to/config.json')
 ```
 
