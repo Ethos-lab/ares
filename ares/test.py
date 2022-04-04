@@ -9,7 +9,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # load config file
-    config_path = "./configs/default.json"
+    config_path = "./configs/hop_skip_attack_config.json"
     config = utils.get_config(config_path)
 
     # create environment

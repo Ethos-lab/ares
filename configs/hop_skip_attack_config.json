@@ -6,7 +6,7 @@
             "norm": "inf",
             "max_iter": 0,
             "max_eval": 1,
-            "init_eval": 0,
+            "init_eval": 1,
             "targeted": false,
             "batch_size": 1,
             "verbose": false
