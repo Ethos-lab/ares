@@ -26,7 +26,7 @@ def get_torch_model(
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     ctor = getattr(module, model_name)
-    model = ctor(**model_params)
+    model: nn.Module = ctor(**model_params)
 
     state_dict = torch.load(model_state, map_location=device)
     model.load_state_dict(state_dict)
@@ -93,7 +93,7 @@ def get_execution_scenario(config: dict) -> "scenario.ExecutionScenario":
     dataroot = config["scenario"]["dataroot"]
     random_noise = config["scenario"]["random_noise"]
     num_episodes = config["scenario"]["num_episodes"]
-    num_trials = config["scenario"]["num_trials"]
+    max_rounds = config["scenario"]["max_rounds"]
 
-    execution_scenario = scenario.ExecutionScenario(threat_model, dataroot, random_noise, num_episodes, num_trials)
+    execution_scenario = scenario.ExecutionScenario(threat_model, dataroot, random_noise, num_episodes, max_rounds)
     return execution_scenario

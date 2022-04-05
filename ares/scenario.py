@@ -6,12 +6,12 @@ import torchvision
 
 
 class ExecutionScenario:
-    def __init__(self, threat_model: str, dataroot: str, random_noise: bool, num_episodes: int, num_trials: int):
+    def __init__(self, threat_model: str, dataroot: str, random_noise: bool, num_episodes: int, max_rounds: int):
         self.threat_model = threat_model
         self.dataroot = dataroot
         self.random_noise = random_noise
         self.num_episodes = num_episodes
-        self.num_trials = num_trials
+        self.max_rounds = max_rounds
 
         transforms = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])
         self.dataset = torchvision.datasets.CIFAR10(root=dataroot, train=False, transform=transforms, download=True)

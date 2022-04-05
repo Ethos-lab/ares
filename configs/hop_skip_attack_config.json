@@ -1,13 +1,12 @@
 {
     "attacker": {
         "attack_type": "evasion",
-        "attack_name": "ProjectedGradientDescent",
+        "attack_name": "HopSkipJump",
         "attack_params": {
             "norm": "inf",
-            "eps": 0.03137254901,
-            "eps_step": 0.00784313725,
-            "num_random_init": 0,
-            "max_iter": 1,
+            "max_iter": 0,
+            "max_eval": 1,
+            "init_eval": 1,
             "targeted": false,
             "batch_size": 1,
             "verbose": false

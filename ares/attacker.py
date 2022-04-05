@@ -15,6 +15,9 @@ class AttackerAgent:
         self.action_space = spaces.Discrete(1)
         self.observation_space = spaces.Dict({})
 
+    def update_policy(self, observation: dict):
+        pass
+
     def attack(self, classifier: PyTorchClassifier, image: np.ndarray, label: np.ndarray) -> np.ndarray:
         attack = self.get_attack(classifier)
         image_adv = attack.generate(x=image, y=label)
