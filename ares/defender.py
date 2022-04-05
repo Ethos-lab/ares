@@ -3,7 +3,6 @@ from typing import List, Optional
 from art.estimators.classification import PyTorchClassifier
 from gym import spaces
 import numpy as np
-import torch
 
 
 class DefenderAgent:
@@ -16,14 +15,17 @@ class DefenderAgent:
         self.action_space = spaces.Discrete(self.num_classifiers)
         self.observation_space = spaces.Dict({})
 
-    def change_classifier(self, index: Optional[int] = None) -> int:
+    def update_policy(self, observation: dict):
+        pass
+
+    def defend(self, index: Optional[int] = None) -> PyTorchClassifier:
         if index is None:
             self.index = np.random.choice(len(self.classifiers), p=self.probs)
         else:
             self.index = index
         self.active_classifier = self.classifiers[self.index]
 
-        return self.index
+        return self.active_classifier
 
     def get_classifier(self, index: Optional[int] = None) -> PyTorchClassifier:
         if index is None:
