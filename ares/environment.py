@@ -43,10 +43,11 @@ class AresEnv(gym.Env):
         label = action["label"]
 
         # defender turn
-        self.defender.change_classifier()
-        classifier = self.defender.get_classifier()
+        self.defender.update_policy({})
+        classifier = self.defender.defend()
 
         # attacker turn
+        self.attacker.update_policy({})
         image_adv = self.attacker.attack(classifier, image, label)
 
         # check winner
