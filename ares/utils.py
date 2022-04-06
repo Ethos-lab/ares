@@ -3,7 +3,6 @@ import importlib.util
 import json
 
 import art
-from art.attacks import EvasionAttack
 from art.estimators.classification import PyTorchClassifier
 import numpy as np
 import torch
@@ -23,16 +22,20 @@ def get_torch_model(
     model_file: str, model_name: str, model_params: dict, model_state: str, device: torch.device
 ) -> nn.Module:
     spec = importlib.util.spec_from_file_location("module.name", model_file)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    ctor = getattr(module, model_name)
-    model: nn.Module = ctor(**model_params)
 
-    state_dict = torch.load(model_state, map_location=device)
-    model.load_state_dict(state_dict)
-    model.to(device)
-    model.eval()
-    return model
+    if spec and spec.loader:
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        ctor = getattr(module, model_name)
+        model: nn.Module = ctor(**model_params)
+
+        state_dict = torch.load(model_state, map_location=device)
+        model.load_state_dict(state_dict)
+        model.to(device)
+        model.eval()
+        return model
+    else:
+        raise ImportError(f"cannot load {model_name} from {model_file}")
 
 
 def get_classifier(
@@ -73,18 +76,24 @@ def get_defender_agent(config: dict, device: torch.device) -> "defender.Defender
     return defender_agent
 
 
-def get_evasion_attack(attack_name: str, classifier: PyTorchClassifier, attack_params: dict) -> EvasionAttack:
-    ctor = getattr(art.attacks.evasion, attack_name)
-    attack = ctor(classifier, **attack_params)
-    return attack
-
-
 def get_attacker_agent(config: dict) -> "attacker.AttackerAgent":
-    attack_type = config["attacker"]["attack_type"].lower()
-    attack_name = config["attacker"]["attack_name"]
-    attack_params = config["attacker"]["attack_params"]
+    attacker_attacks = config["attacker"]["attacks"]
+    attacks = []
 
-    attacker_agent = attacker.AttackerAgent(attack_type, attack_name, attack_params)
+    for attack in attacker_attacks:
+        attack_type = attack["attack_type"].lower()
+        attack_name = attack["attack_name"]
+        attack_params = attack["attack_params"]
+        attacks_config = attacker.AttackConfig(attack_type, attack_name, attack_params)
+        attacks.append(attacks_config)
+
+    probs = config["attacker"].get("probabilities", None)
+    if probs:
+        probs = np.array(probs) / np.sum(probs)
+    else:
+        probs = np.ones(len(attacks)) / len(attacks)
+
+    attacker_agent = attacker.AttackerAgent(attacks, probs)
     return attacker_agent
 
 

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from art.estimators.classification import PyTorchClassifier
 from gym import spaces
@@ -18,16 +18,8 @@ class DefenderAgent:
     def update_policy(self, observation: dict):
         pass
 
-    def defend(self, index: Optional[int] = None) -> PyTorchClassifier:
-        if index is None:
-            self.index = np.random.choice(len(self.classifiers), p=self.probs)
-        else:
-            self.index = index
+    def defend(self) -> PyTorchClassifier:
+        self.index = np.random.choice(len(self.classifiers), p=self.probs)
         self.active_classifier = self.classifiers[self.index]
 
         return self.active_classifier
-
-    def get_classifier(self, index: Optional[int] = None) -> PyTorchClassifier:
-        if index is None:
-            return self.active_classifier
-        return self.classifiers[index]
