@@ -1,17 +1,26 @@
-from art.attacks.attack import EvasionAttack
+from typing import List, NamedTuple
+
+import art
+from art.attacks.attack import EvasionAttack, PoisoningAttack
 from art.estimators.classification import PyTorchClassifier
 from gym import spaces
 import numpy as np
 
-from ares import utils
+
+class AttackConfig(NamedTuple):
+    attack_type: str
+    attack_name: str
+    attack_params: dict
 
 
 class AttackerAgent:
-    def __init__(self, attack_type: str, attack_name: str, attack_params):
+    def __init__(self, attacks: List[AttackConfig], probs: List[float]):
         self.num_steps = 0
-        self.attack_type = attack_type
-        self.attack_name = attack_name
-        self.attack_params = attack_params
+        self.attacks = attacks
+        self.probs = probs
+        self.num_attacks = len(attacks)
+        self.index = 0
+        self.active_attack = self.attacks[self.index]
         self.action_space = spaces.Discrete(1)
         self.observation_space = spaces.Dict({})
 
@@ -19,13 +28,28 @@ class AttackerAgent:
         pass
 
     def attack(self, classifier: PyTorchClassifier, image: np.ndarray, label: np.ndarray) -> np.ndarray:
-        attack = self.get_attack(classifier)
-        image_adv = attack.generate(x=image, y=label)
+        self.index = np.random.choice(len(self.attacks), p=self.probs)
+        attack_config = self.attacks[self.index]
+        self.active_attack = attack_config
+
+        # only supports evasion attacks for now
+        if attack_config.attack_type == "evasion":
+            attack = get_evasion_attack(attack_config.attack_name, classifier, attack_config.attack_params)
+            image_adv = attack.generate(x=image, y=label)
+        else:
+            raise Exception(f"{attack_config.attack_type} attacks not supported")
+
         self.num_steps += 1
         return image_adv
 
-    def get_attack(self, classifier: PyTorchClassifier) -> EvasionAttack:
-        if self.attack_type == "evasion":
-            return utils.get_evasion_attack(self.attack_name, classifier, self.attack_params)
-        else:
-            raise Exception(f"{self.attack_type} attacks not supported")
+
+def get_evasion_attack(attack_name: str, classifier: PyTorchClassifier, attack_params: dict) -> EvasionAttack:
+    ctor = getattr(art.attacks.evasion, attack_name)
+    attack = ctor(classifier, **attack_params)
+    return attack
+
+
+def get_poisoning_attack(attack_name: str, classifier: PyTorchClassifier, attack_params: dict) -> PoisoningAttack:
+    ctor = getattr(art.attacks.poisoning, attack_name)
+    attack = ctor(classifier, **attack_params)
+    return attack
