@@ -6,12 +6,13 @@ import numpy as np
 
 
 class DefenderAgent:
-    def __init__(self, classifiers: List[PyTorchClassifier], probs: List[float]):
+    def __init__(self, classifiers: List[PyTorchClassifier], probs: List[float], detector):
         self.classifiers = classifiers
         self.probs = probs
         self.num_classifiers = len(classifiers)
         self.index = 0
         self.active_classifier = self.classifiers[self.index]
+        self.detector = detector
         self.action_space = spaces.Discrete(self.num_classifiers)
         self.observation_space = spaces.Dict({})
 
@@ -23,3 +24,7 @@ class DefenderAgent:
         self.active_classifier = self.classifiers[self.index]
 
         return self.active_classifier
+    
+    def detect(self, x):
+        is_adv = self.detector.detect(x)
+        return is_adv
