@@ -1,5 +1,6 @@
-import gym
 import numpy as np
+import matplotlib.pyplot as plt
+import gym
 import torch
 
 from ares import utils
@@ -7,7 +8,7 @@ from ares import utils
 
 def get_manual_config(attacks, defenses):
     attack_options = {
-        # whitebox attack PGD
+        # whitebox PGD
         'ProjectedGradientDescent': {
             "attack_type": "evasion",
             "attack_name": "ProjectedGradientDescent",
@@ -22,7 +23,7 @@ def get_manual_config(attacks, defenses):
                 "verbose": False
             }
         },
-        # blackbox attack SquareAttack
+        # blackbox SquareAttack
         'SquareAttack': {
             "attack_type": "evasion",
             "attack_name": "SquareAttack",
@@ -31,6 +32,45 @@ def get_manual_config(attacks, defenses):
                 "eps": 0.03137254901,
                 "max_iter": 1,
                 "batch_size": 1,
+                "verbose": False
+            }
+        },
+        # blackbox HopSkipJump Attack
+        'HopSkipJump': {
+            "attack_type": "evasion",
+            "attack_name": "HopSkipJump",
+            "attack_params": {
+                "norm": "inf",
+                "targeted": False,
+                "max_iter": 1,
+                "max_eval": 1,
+                "init_eval": 1,
+                "init_size": 1,
+                "batch_size": 1,
+                "verbose": False
+            }
+        },
+        # blackbox ZOO Attack
+        'ZooAttack': {
+            "attack_type": "evasion",
+            "attack_name": "ZooAttack",
+            "attack_params": {
+                "targeted": False,
+                "max_iter": 1,
+                "binary_search_steps": 1,
+                "batch_size": 1,
+                "verbose": False
+            }
+        },
+        # blackbox Spatial Transformations Attack
+        'SpatialTransformation': {
+            "attack_type": "evasion",
+            "attack_name": "SpatialTransformation",
+            "attack_params": {
+                "max_translation": 1,
+                "num_translations": 1,
+                "max_rotation": 1,
+                "num_rotations": 1,
                 "verbose": False
             }
         },
@@ -146,9 +186,9 @@ def get_manual_config(attacks, defenses):
             'threat_model': 'white_box',
             'num_agents': 2,
             'reward': 0,
-            'dataroot': '../downloads',
+            'dataroot': './downloads',
             'random_noise': True,
-            'num_episodes': 50,
+            'num_episodes': 25,
             'max_rounds': 50
         }
     }
@@ -163,12 +203,15 @@ def main():
     # config_path = "./configs/multiple_attacks.json"
     # config = utils.get_config(config_path)
     attacks = {
-        'ProjectedGradientDescent',
+        # 'ProjectedGradientDescent',
         # 'SquareAttack',
+        # 'HopSkipJump',
+        # 'ZooAttack',
+        'SpatialTransformation',
     }
     defenses = {
-        'resnet18_nat',
-        # 'resnet18_adv',
+        # 'resnet18_nat',
+        'resnet18_adv',
         # 'resnet50_nat',
         # 'resnet50_adv',
         # 'vgg11_nat',
@@ -218,6 +261,9 @@ def main():
     print(
         f"mean: {np.mean(episode_rewards)}, stddev: {np.std(episode_rewards):.3f}, median: {np.median(episode_rewards)}"
     )
+
+    # plt.hist(episode_rewards)
+    # plt.show()
 
 
 if __name__ == "__main__":
