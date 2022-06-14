@@ -47,9 +47,10 @@ def main():
 
     # scenario stats
     print(episode_rewards)
-    print(
-        f"mean: {np.mean(episode_rewards)}, stddev: {np.std(episode_rewards):.3f}, median: {np.median(episode_rewards)}"
-    )
+    mean = np.mean(episode_rewards)
+    stddev = np.std(episode_rewards)
+    median = np.median(episode_rewards)
+    print(f"mean: {mean}, stddev: {stddev:.3f}, median: {median}")
 
 
 if __name__ == "__main__":

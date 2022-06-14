@@ -63,7 +63,7 @@ class AresEnv(gym.Env):
         pred = classifier.reduce_labels(out)
         if detected:
             self.done = True
-            winner = 'defender'
+            winner = "defender"
         elif pred != label:
             self.done = True
             winner = "attacker"

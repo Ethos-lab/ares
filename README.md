@@ -2,19 +2,6 @@
 
 Ares is a system-oriented wargame framework for adversarial ML used to simulate interactions between an attacker and defender in a real-time battle.
 
-## Table of Contents
-
-- [Ares](#ares)
-  - [Table of Contents](#table-of-contents)
-  - [Requirements](#requirements)
-  - [Installation](#installation)
-  - [Structure](#structure)
-    - [Attacker Agent](#attacker-agent)
-    - [Defender Agent](#defender-agent)
-    - [Evaluation Scenario](#evaluation-scenario)
-  - [Config File](#config-file)
-  - [Usage](#usage)
-
 ## Requirements
 
 Ares uses the following dependencies:
@@ -37,7 +24,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-Install the package dependencies into the virtual environment.
+Install all the package dependencies.
 
 ```bash
 pip install -e .
@@ -67,7 +54,7 @@ The evaluation scenario (or simply scenario) defines the main parameters for the
 
 ## Config File
 
-Ares uses a JSON configuration file to specify the parameters used to run the simulation. This JSON file has a field to instantiate each of the three components: attacker, defender, and scenario. An example configuration file is available in `ares/configs/default.json`.
+Ares uses a JSON configuration file to specify the parameters used to run the simulation. This JSON file has a field to instantiate each of the three components: attacker, defender, and scenario. For example configuration files, view the `configs/` directory.
 
 ## Usage
 
@@ -95,9 +82,9 @@ Next, we create the environment that houses these components
 ```python
 # create environment
 env = gym.make(
-    'AresEnv-v0', 
-    attacker=attacker_agent, 
-    defender=defender_agent, 
+    'AresEnv-v0',
+    attacker=attacker_agent,
+    defender=defender_agent,
     scenario=execution_scenario
 )
 ```
@@ -133,4 +120,19 @@ for trial in range(execution_scenario.num_trials):
 
     print(f'\nGame end: {winner} wins after {episode} rounds')
     counts.append(episode)
+```
+
+For a more detailed example, view the demo Jupyter notebook in `notebooks/demo.ipynb`.
+
+## Citation
+
+If you use this code in your work please cite the following paper:
+
+```bibtex
+@inproceedings{ahmed2022ares,
+      title={Ares: A System-Oriented Wargame Framework for Adversarial ML},
+      author={Farhan Ahmed and Pratik Vaishnavi and Kevin Ekyholt and Amir Rahmati},
+      booktitle={IEEE Security and Privacy Workshops (SPW)},
+      year={2022},
+}
 ```
