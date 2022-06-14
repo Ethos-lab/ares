@@ -22,12 +22,12 @@
         "probabilities": [0.3, 0.7],
         "models": [
             {
-                "model_file": "./downloads/models/resnet.py",
+                "model_file": "./data/models/resnet.py",
                 "model_name": "resnet18_nat",
                 "model_params": {
                     "num_classes": 10
                 },
-                "model_state": "./downloads/state_dicts/resnet18_nat.pth",
+                "model_state": "./data/state_dicts/resnet18_nat.pth",
                 "classifier_type": "PyTorchClassifier",
                 "classifier_params": {
                     "loss": "torch.nn.CrossEntropyLoss",
@@ -37,12 +37,12 @@
                 }
             },
             {
-                "model_file": "./downloads/models/resnet.py",
+                "model_file": "./data/models/resnet.py",
                 "model_name": "resnet18_adv",
                 "model_params": {
                     "num_classes": 10
                 },
-                "model_state": "./downloads/state_dicts/resnet18_adv.pth",
+                "model_state": "./data/state_dicts/resnet18_adv.pth",
                 "classifier_type": "PyTorchClassifier",
                 "classifier_params": {
                     "loss": "torch.nn.CrossEntropyLoss",
@@ -53,7 +53,7 @@
             }
         ],
         "detector": {
-            "detector_file": "./downloads/detectors/blackbox_detector.py",
+            "detector_file": "./data/detectors/blackbox_detector.py",
             "detector_name": "blackbox_detector",
             "detector_function": "detect",
             "detector_params": {},
@@ -64,7 +64,7 @@
         "threat_model": "white_box",
         "num_agents": 2,
         "reward": 0,
-        "dataroot": "./downloads",
+        "dataroot": "./data",
         "random_noise": true,
         "num_episodes": 50,
         "max_rounds": 50
