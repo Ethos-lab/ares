@@ -15,7 +15,8 @@
                     "verbose": false
                 }
             }
-        ]
+        ],
+        "evasion_prob": 0.1
     },
     "defender": {
         "probabilities": [0.3, 0.7],
@@ -56,7 +57,7 @@
             "detector_name": "blackbox_detector",
             "detector_function": "detect",
             "detector_params": {},
-            "probability": 0.5
+            "probability": 0.75
         }
     },
     "scenario": {

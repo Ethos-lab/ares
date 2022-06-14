@@ -51,9 +51,6 @@ def get_classifier(
 
 
 def get_detector(detector_args: dict) -> "defender.Detector":
-    if not detector_args:
-        return defender.Detector(None, None, None)
-
     detector_file = detector_args.get("detector_file", None)
     detector_name = detector_args.get("detector_name", None)
     detector_fn = detector_args.get("detector_function", None)
@@ -94,7 +91,10 @@ def get_defender_agent(config: dict, device: torch.device) -> "defender.Defender
         probs = np.ones(len(classifiers)) / len(classifiers)
 
     detector_args = config["defender"].get("detector", None)
-    detector = get_detector(detector_args)
+    if detector_args:
+        detector = get_detector(detector_args)
+    else:
+        detector = None
 
     defender_agent = defender.DefenderAgent(classifiers, probs, detector)
     return defender_agent

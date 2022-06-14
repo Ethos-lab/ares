@@ -6,24 +6,21 @@ import numpy as np
 
 
 class Detector:
-    def __init__(self, detector: Optional[Any], fn_name: Optional[str], probability: Optional[float]):
-        self.detector = detector
+    def __init__(self, module: Any, fn_name: str, probability: float):
+        self.module = module
         self.fn_name = fn_name
         self.probability = probability
 
-    def detect(self, x: Optional[np.ndarray]) -> bool:
-        if x is None or self.detector is None:
-            return False
-
+    def detect(self, x: np.ndarray) -> bool:
         p = np.random.rand()
         if p < self.probability:
-            detected = getattr(self.detector, self.fn_name)(x)
+            detected = getattr(self.module, self.fn_name)(x)
             return detected
         return False
 
 
 class DefenderAgent:
-    def __init__(self, classifiers: List[PyTorchClassifier], probs: List[float], detector: Detector):
+    def __init__(self, classifiers: List[PyTorchClassifier], probs: List[float], detector: Optional[Detector]):
         self.classifiers = classifiers
         self.probs = probs
         self.num_classifiers = len(classifiers)
@@ -39,9 +36,9 @@ class DefenderAgent:
     def defend(self) -> PyTorchClassifier:
         self.index = np.random.choice(len(self.classifiers), p=self.probs)
         self.active_classifier = self.classifiers[self.index]
-
         return self.active_classifier
 
-    def detect(self, x: Optional[np.ndarray]):
-        is_adv = self.detector.detect(x)
-        return is_adv
+    def detect(self, x: np.ndarray) -> bool:
+        if self.detector:
+            return self.detector.detect(x)
+        return False

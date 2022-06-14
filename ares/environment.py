@@ -50,8 +50,12 @@ class AresEnv(gym.Env):
         self.attacker.update_policy({})
         image_adv = self.attacker.attack(classifier, image, label)
 
-        # run detector
-        detected = self.defender.detect(image_adv)
+        # run detector if not evading
+        if image_adv is None:
+            image_adv = image
+            detected = False
+        else:
+            detected = self.defender.detect(image_adv)
 
         # check winner
         winner = None
@@ -70,7 +74,7 @@ class AresEnv(gym.Env):
         observation = {
             "image": image,
             "label": label,
-            "image_adv": image_adv if image_adv is not None else image,
+            "image_adv": image_adv,
             "pred": pred,
             "winner": winner,
         }
