@@ -24,25 +24,25 @@ def main():
 
         # initialize environment
         observation = env.reset()
-        image = observation["image"]
-        label = observation["label"]
+        x = observation["x"]
+        y = observation["y"]
         done = False
 
         # run simulation
         while not done:
             action = {
-                "image": image,
-                "label": label,
+                "x": x,
+                "y": y,
             }
             observation, reward, done, info = env.step(action)
-            image = observation["image_adv"]
-            pred = observation["pred"]
+            x = observation["x_adv"]
+            y_pred = observation["y_pred"]
             winner = observation["winner"]
             step_count = info["step_count"]
 
-            print(f"Step {step_count:2}: ({label[0]} | {pred[0]})")
+            print(f"Step {step_count:2}: ({y[0]} | {y_pred[0]})")
 
-        print(f"Game end: {winner} wins")
+        print(f"Game end: {winner} wins after {episode} rounds")
         episode_rewards.append(reward)
 
     # scenario stats
