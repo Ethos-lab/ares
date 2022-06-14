@@ -55,7 +55,8 @@
             "detector_file": "./downloads/detectors/blackbox_detector.py",
             "detector_name": "blackbox_detector",
             "detector_function": "detect",
-            "detector_params": {}
+            "detector_params": {},
+            "probability": 0.5
         }
     },
     "scenario": {

@@ -51,6 +51,29 @@ def get_classifier(
     return classifier
 
 
+def get_detector(detector_args: dict) -> "defender.Detector":
+    if not detector_args:
+        return defender.Detector(None, None, None)
+
+    detector_file = detector_args.get('detector_file', None)
+    detector_name = detector_args.get('detector_name', None)
+    detector_fn = detector_args.get('detector_function', None)
+    detector_params = detector_args.get('detector_params', None)
+    probability = detector_args.get('probability', None)
+
+    spec = importlib.util.spec_from_file_location("module.name", detector_file)
+
+    if spec and spec.loader:
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        ctor = getattr(module, detector_name)
+        model = ctor(**detector_params)
+        detector = defender.Detector(model, detector_fn, probability)
+        return detector
+    else:
+        raise ImportError(f"cannot load {detector_name} from {detector_file}")
+
+
 def get_defender_agent(config: dict, device: torch.device) -> "defender.DefenderAgent":
     defender_models = config["defender"]["models"]
     classifiers = []
@@ -72,7 +95,10 @@ def get_defender_agent(config: dict, device: torch.device) -> "defender.Defender
     else:
         probs = np.ones(len(classifiers)) / len(classifiers)
 
-    defender_agent = defender.DefenderAgent(classifiers, probs)
+    detector_args = config['defender'].get('detector', None)
+    detector = get_detector(detector_args)
+
+    defender_agent = defender.DefenderAgent(classifiers, probs, detector)
     return defender_agent
 
 
@@ -93,7 +119,9 @@ def get_attacker_agent(config: dict) -> "attacker.AttackerAgent":
     else:
         probs = np.ones(len(attacks)) / len(attacks)
 
-    attacker_agent = attacker.AttackerAgent(attacks, probs)
+    evasion_prob = config["attacker"].get('evasion_prob', None)
+
+    attacker_agent = attacker.AttackerAgent(attacks, probs, evasion_prob)
     return attacker_agent
 
 
