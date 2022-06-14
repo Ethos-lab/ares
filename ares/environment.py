@@ -2,6 +2,7 @@ from typing import Tuple
 
 import gym
 from gym import spaces
+import numpy as np
 
 from ares.attacker import AttackerAgent
 from ares.defender import DefenderAgent
@@ -28,10 +29,10 @@ class AresEnv(gym.Env):
         self.step_count = 0
         self.reward = 0
 
-        image, label = self.scenario.get_valid_sample(self.defender.classifiers)
+        x, y = self.scenario.get_valid_sample(self.defender.classifiers)
         observation = {
-            "image": image,
-            "label": label,
+            "x": x,
+            "y": y,
         }
 
         return observation
@@ -39,8 +40,8 @@ class AresEnv(gym.Env):
     def step(self, action: dict) -> Tuple[dict, float, bool, dict]:
         self.step_count += 1
 
-        image = action["image"]
-        label = action["label"]
+        x: np.ndarray = action["x"]
+        y: np.ndarray = action["y"]
 
         # defender turn
         self.defender.update_policy({})
@@ -48,23 +49,23 @@ class AresEnv(gym.Env):
 
         # attacker turn
         self.attacker.update_policy({})
-        image_adv = self.attacker.attack(classifier, image, label)
+        x_adv = self.attacker.attack(classifier, x, y)
 
         # run detector if not evading
-        if image_adv is None:
-            image_adv = image
+        if x_adv is None:
+            x_adv = x
             detected = False
         else:
-            detected = self.defender.detect(image_adv)
+            detected = self.defender.detect(x_adv)
 
         # check winner
         winner = None
-        out = classifier.predict(image_adv)
-        pred = classifier.reduce_labels(out)
+        out = classifier.predict(x_adv)
+        y_pred = classifier.reduce_labels(out)
         if detected:
             self.done = True
             winner = "defender"
-        elif pred != label:
+        elif y_pred != y:
             self.done = True
             winner = "attacker"
         elif self.step_count >= self.scenario.max_rounds:
@@ -72,19 +73,18 @@ class AresEnv(gym.Env):
             winner = "defender"
 
         observation = {
-            "image": image,
-            "label": label,
-            "image_adv": image_adv,
-            "pred": pred,
+            "x": x,
+            "y": y,
+            "x_adv": x_adv,
+            "y_pred": y_pred,
             "winner": winner,
         }
-
         info = {
             "description": "",
             "step_count": self.step_count,
         }
-
         self.reward = self.step_count
+        self.episode_rewards.append(self.reward)
 
         return observation, self.reward, self.done, info
 

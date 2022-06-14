@@ -34,7 +34,7 @@ class AttackerAgent:
             return p < self.evasion_prob
         return False
 
-    def attack(self, classifier: PyTorchClassifier, image: np.ndarray, label: np.ndarray) -> Optional[np.ndarray]:
+    def attack(self, classifier: PyTorchClassifier, x: np.ndarray, y: np.ndarray) -> Optional[np.ndarray]:
         evade_turn = self.evade()
         if evade_turn:
             return None
@@ -46,12 +46,12 @@ class AttackerAgent:
         # only supports evasion attacks for now
         if attack_config.attack_type == "evasion":
             attack = get_evasion_attack(attack_config.attack_name, classifier, attack_config.attack_params)
-            image_adv = attack.generate(x=image, y=label)
+            x_adv = attack.generate(x=x, y=y)
         else:
             raise Exception(f"{attack_config.attack_type} attacks not supported")
 
         self.num_steps += 1
-        return image_adv
+        return x_adv
 
 
 def get_evasion_attack(attack_name: str, classifier: PyTorchClassifier, attack_params: dict) -> EvasionAttack:

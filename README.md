@@ -92,34 +92,38 @@ env = gym.make(
 We can run the experiment for the specified number of trials (which can be set in the config file) and record the number of rounds until the attacker wins for each trial.
 
 ```python
-counts = []
-for trial in range(execution_scenario.num_trials):
-    print(f'=== Trial {trial + 1} ===')
+episode_rewards = []
+for episode in range(execution_scenario.num_episodes):
+    print(f"=== Episode {episode + 1} ===")
 
     # initialize environment
     observation = env.reset()
-    image = observation['image']
-    label = observation['label']
+    x = observation['x']
+    y = observation['y']
     done = False
-    print(f'True label: {label[0]}')
-    print('Preds: ', end='')
 
     # run simulation
     while not done:
         action = {
-            'image': image,
-            'label': label,
+            'x': x,
+            'y': y,
         }
         observation, reward, done, info = env.step(action)
-        image = observation['image_adv']
-        pred = observation['pred']
+        x = observation['x_adv']
+        y_pred = observation['y_pred']
         winner = observation['winner']
-        episode = info['step_count']
+        step_count = info["step_count"]
 
-        print(f'{pred[0]}, ', end='')
+        print(f"Step {step_count:2}: ({y[0]} | {y_pred[0]})")
 
-    print(f'\nGame end: {winner} wins after {episode} rounds')
-    counts.append(episode)
+    print(f'Game end: {winner} wins after {episode} rounds')
+    episode_rewards.append(reward)
+
+# scenario stats
+mean = np.mean(episode_rewards)
+stddev = np.std(episode_rewards)
+median = np.median(episode_rewards)
+print(f'mean: {mean}, stddev: {stddev:.3f}, median: {median}')
 ```
 
 For a more detailed example, view the demo Jupyter notebook in `notebooks/demo.ipynb`.
