@@ -1,4 +1,4 @@
-from typing import List, Any, Optional
+from typing import Any, List, Optional
 
 from art.estimators.classification import PyTorchClassifier
 from gym import spaces
@@ -41,7 +41,7 @@ class DefenderAgent:
         self.active_classifier = self.classifiers[self.index]
 
         return self.active_classifier
-    
+
     def detect(self, x: Optional[np.ndarray]):
         is_adv = self.detector.detect(x)
         return is_adv

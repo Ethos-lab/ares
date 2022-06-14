@@ -22,7 +22,6 @@ def get_torch_model(
     model_file: str, model_name: str, model_params: dict, model_state: str, device: torch.device
 ) -> nn.Module:
     spec = importlib.util.spec_from_file_location("module.name", model_file)
-
     if spec and spec.loader:
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -55,14 +54,13 @@ def get_detector(detector_args: dict) -> "defender.Detector":
     if not detector_args:
         return defender.Detector(None, None, None)
 
-    detector_file = detector_args.get('detector_file', None)
-    detector_name = detector_args.get('detector_name', None)
-    detector_fn = detector_args.get('detector_function', None)
-    detector_params = detector_args.get('detector_params', None)
-    probability = detector_args.get('probability', None)
+    detector_file = detector_args.get("detector_file", None)
+    detector_name = detector_args.get("detector_name", None)
+    detector_fn = detector_args.get("detector_function", None)
+    detector_params = detector_args.get("detector_params", None)
+    probability = detector_args.get("probability", None)
 
     spec = importlib.util.spec_from_file_location("module.name", detector_file)
-
     if spec and spec.loader:
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -95,7 +93,7 @@ def get_defender_agent(config: dict, device: torch.device) -> "defender.Defender
     else:
         probs = np.ones(len(classifiers)) / len(classifiers)
 
-    detector_args = config['defender'].get('detector', None)
+    detector_args = config["defender"].get("detector", None)
     detector = get_detector(detector_args)
 
     defender_agent = defender.DefenderAgent(classifiers, probs, detector)
@@ -107,7 +105,7 @@ def get_attacker_agent(config: dict) -> "attacker.AttackerAgent":
     attacks = []
 
     for attack in attacker_attacks:
-        attack_type = attack["attack_type"].lower()
+        attack_type = attack["attack_type"]
         attack_name = attack["attack_name"]
         attack_params = attack["attack_params"]
         attacks_config = attacker.AttackConfig(attack_type, attack_name, attack_params)
@@ -119,7 +117,7 @@ def get_attacker_agent(config: dict) -> "attacker.AttackerAgent":
     else:
         probs = np.ones(len(attacks)) / len(attacks)
 
-    evasion_prob = config["attacker"].get('evasion_prob', None)
+    evasion_prob = config["attacker"].get("evasion_prob", None)
 
     attacker_agent = attacker.AttackerAgent(attacks, probs, evasion_prob)
     return attacker_agent

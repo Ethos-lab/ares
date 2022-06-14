@@ -9,7 +9,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # load config file
-    config_path = "./configs/multiple_attacks.json"
+    config_path = "./configs/detector.json"
     config = utils.get_config(config_path)
 
     # create environment
