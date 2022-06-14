@@ -50,11 +50,21 @@ class AresEnv(gym.Env):
         self.attacker.update_policy({})
         image_adv = self.attacker.attack(classifier, image, label)
 
+        # run detector if not evading
+        if image_adv is None:
+            image_adv = image
+            detected = False
+        else:
+            detected = self.defender.detect(image_adv)
+
         # check winner
         winner = None
         out = classifier.predict(image_adv)
         pred = classifier.reduce_labels(out)
-        if pred != label:
+        if detected:
+            self.done = True
+            winner = 'defender'
+        elif pred != label:
             self.done = True
             winner = "attacker"
         elif self.step_count >= self.scenario.max_rounds:

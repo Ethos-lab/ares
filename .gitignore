@@ -152,6 +152,6 @@ cython_debug/
 #.idea/
 
 # Other
-ares/state_dicts.zip
-ares/state_dicts/
+data/
 models/
+state_dicts/

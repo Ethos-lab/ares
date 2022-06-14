@@ -1,0 +1,72 @@
+{
+    "attacker": {
+        "attacks": [
+            {
+                "attack_type": "evasion",
+                "attack_name": "ProjectedGradientDescent",
+                "attack_params": {
+                    "norm": "inf",
+                    "eps": 0.03137254901,
+                    "eps_step": 0.00784313725,
+                    "num_random_init": 0,
+                    "max_iter": 1,
+                    "targeted": false,
+                    "batch_size": 1,
+                    "verbose": false
+                }
+            }
+        ],
+        "evasion_prob": 0.1
+    },
+    "defender": {
+        "probabilities": [0.3, 0.7],
+        "models": [
+            {
+                "model_file": "./downloads/models/resnet.py",
+                "model_name": "resnet18_nat",
+                "model_params": {
+                    "num_classes": 10
+                },
+                "model_state": "./downloads/state_dicts/resnet18_nat.pth",
+                "classifier_type": "PyTorchClassifier",
+                "classifier_params": {
+                    "loss": "torch.nn.CrossEntropyLoss",
+                    "input_shape": [3, 32, 32],
+                    "nb_classes": 10,
+                    "clip_values": [0, 1]
+                }
+            },
+            {
+                "model_file": "./downloads/models/resnet.py",
+                "model_name": "resnet18_adv",
+                "model_params": {
+                    "num_classes": 10
+                },
+                "model_state": "./downloads/state_dicts/resnet18_adv.pth",
+                "classifier_type": "PyTorchClassifier",
+                "classifier_params": {
+                    "loss": "torch.nn.CrossEntropyLoss",
+                    "input_shape": [3, 32, 32],
+                    "nb_classes": 10,
+                    "clip_values": [0, 1]
+                }
+            }
+        ],
+        "detector": {
+            "detector_file": "./downloads/detectors/blackbox_detector.py",
+            "detector_name": "blackbox_detector",
+            "detector_function": "detect",
+            "detector_params": {},
+            "probability": 0.75
+        }
+    },
+    "scenario": {
+        "threat_model": "white_box",
+        "num_agents": 2,
+        "reward": 0,
+        "dataroot": "./downloads",
+        "random_noise": true,
+        "num_episodes": 50,
+        "max_rounds": 50
+    }
+}

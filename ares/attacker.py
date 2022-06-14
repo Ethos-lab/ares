@@ -1,4 +1,4 @@
-from typing import List, NamedTuple
+from typing import List, NamedTuple, Optional
 
 import art
 from art.attacks.attack import EvasionAttack, PoisoningAttack
@@ -14,10 +14,11 @@ class AttackConfig(NamedTuple):
 
 
 class AttackerAgent:
-    def __init__(self, attacks: List[AttackConfig], probs: List[float]):
+    def __init__(self, attacks: List[AttackConfig], probs: List[float], evasion_prob: Optional[float]):
         self.num_steps = 0
         self.attacks = attacks
         self.probs = probs
+        self.evasion_prob = evasion_prob
         self.num_attacks = len(attacks)
         self.index = 0
         self.active_attack = self.attacks[self.index]
@@ -27,7 +28,17 @@ class AttackerAgent:
     def update_policy(self, observation: dict):
         pass
 
-    def attack(self, classifier: PyTorchClassifier, image: np.ndarray, label: np.ndarray) -> np.ndarray:
+    def evade(self):
+        if self.evasion_prob is not None:
+            p = np.random.rand()
+            return p < self.evasion_prob
+        return False
+
+    def attack(self, classifier: PyTorchClassifier, image: np.ndarray, label: np.ndarray) -> Optional[np.ndarray]:
+        evade_turn = self.evade()
+        if evade_turn:
+            return None
+
         self.index = np.random.choice(len(self.attacks), p=self.probs)
         attack_config = self.attacks[self.index]
         self.active_attack = attack_config
