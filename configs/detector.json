@@ -2,9 +2,9 @@
     "attacker": {
         "attacks": [
             {
-                "attack_type": "evasion",
-                "attack_name": "ProjectedGradientDescent",
-                "attack_params": {
+                "type": "evasion",
+                "name": "ProjectedGradientDescent",
+                "params": {
                     "norm": "inf",
                     "eps": 0.03137254901,
                     "eps_step": 0.00784313725,
@@ -16,7 +16,7 @@
                 }
             }
         ],
-        "evasion_prob": 0.1
+        "evasion_probability": 0.1
     },
     "defender": {
         "probabilities": [0.3, 0.7],

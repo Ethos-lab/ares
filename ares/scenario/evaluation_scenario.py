@@ -36,14 +36,3 @@ class EvaluationScenario:
             x = x + noise
 
         return x, y
-
-
-def get_evaluation_scenario(config: dict) -> EvaluationScenario:
-    threat_model = config["scenario"]["threat_model"]
-    dataroot = config["scenario"]["dataroot"]
-    random_noise = config["scenario"]["random_noise"]
-    num_episodes = config["scenario"]["num_episodes"]
-    max_rounds = config["scenario"]["max_rounds"]
-
-    execution_scenario = EvaluationScenario(threat_model, dataroot, random_noise, num_episodes, max_rounds)
-    return execution_scenario

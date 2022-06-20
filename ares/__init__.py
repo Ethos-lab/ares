@@ -3,8 +3,8 @@ import logging
 from gym.envs.registration import register
 
 from ares import attacker, defender, environment, scenario
-from ares.environment import create_environment, load_config
 from ares.run import main
+from ares.utils import create_environment, load_config
 
 logger = logging.getLogger(__name__)
 

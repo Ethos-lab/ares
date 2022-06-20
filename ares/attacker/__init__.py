@@ -1,3 +1,4 @@
-from .attacker_agent import AttackConfig, AttackerAgent, get_attacker_agent
+from .attack import Attack
+from .attacker_agent import AttackerAgent
 
-__all__ = ["AttackConfig", "AttackerAgent", "get_attacker_agent"]
+__all__ = ["Attack", "AttackerAgent"]

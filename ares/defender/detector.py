@@ -1,13 +1,20 @@
 import importlib
 import importlib.util
-from typing import Any, NamedTuple
 
 import numpy as np
 
 
 class Detector:
-    def __init__(self, module: Any, function: str, probability: float):
-        self.module = module
+    def __init__(self, file: str, name: str, function: str, params: str, probability: float):
+        spec = importlib.util.spec_from_file_location("module.name", file)
+        if spec and spec.loader:
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            ctor = getattr(module, name)
+            self.module = ctor(**params)
+        else:
+            raise ImportError(f"Error creating detector: cannot load {name} from {file}")
+
         self.function = function
         self.probability = probability
 
@@ -17,24 +24,3 @@ class Detector:
             detected = getattr(self.module, self.function)(x)
             return detected
         return False
-
-
-class DetectorConfig(NamedTuple):
-    file: str
-    name: str
-    function: str
-    params: dict
-    probability: float = 1.0
-
-
-def get_detector(detector_config: DetectorConfig) -> Detector:
-    spec = importlib.util.spec_from_file_location("module.name", detector_config.file)
-    if spec and spec.loader:
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        ctor = getattr(module, detector_config.name)
-        model = ctor(**detector_config.params)
-        detector = Detector(model, detector_config.function, detector_config.probability)
-        return detector
-    else:
-        raise ImportError(f"cannot load {detector_config.name} from {detector_config.file}")

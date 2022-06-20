@@ -1,24 +1,18 @@
-from typing import List, NamedTuple, Optional
+from typing import List, Optional
 
-import art
-from art.attacks.attack import EvasionAttack, PoisoningAttack
 from art.estimators.classification import PyTorchClassifier
 from gym import spaces
 import numpy as np
 
-
-class AttackConfig(NamedTuple):
-    attack_type: str
-    attack_name: str
-    attack_params: dict
+from ares.attacker.attack import Attack
 
 
 class AttackerAgent:
-    def __init__(self, attacks: List[AttackConfig], probs: List[float], evasion_prob: Optional[float]):
+    def __init__(self, attacks: List[Attack], probabilities: List[float], evasion_probability: Optional[float]):
         self.num_steps = 0
         self.attacks = attacks
-        self.probs = probs
-        self.evasion_prob = evasion_prob
+        self.probabilities = probabilities
+        self.evasion_probability = evasion_probability
         self.num_attacks = len(attacks)
         self.index = 0
         self.active_attack = self.attacks[self.index]
@@ -29,9 +23,9 @@ class AttackerAgent:
         pass
 
     def evade(self):
-        if self.evasion_prob is not None:
+        if self.evasion_probability is not None:
             p = np.random.rand()
-            return p < self.evasion_prob
+            return p < self.evasion_probability
         return False
 
     def attack(self, classifier: PyTorchClassifier, x: np.ndarray, y: np.ndarray) -> Optional[np.ndarray]:
@@ -39,51 +33,8 @@ class AttackerAgent:
         if evade_turn:
             return None
 
-        self.index = np.random.choice(len(self.attacks), p=self.probs)
-        attack_config = self.attacks[self.index]
-        self.active_attack = attack_config
-
-        # only supports evasion attacks for now
-        if attack_config.attack_type == "evasion":
-            attack = get_evasion_attack(attack_config.attack_name, classifier, attack_config.attack_params)
-            x_adv = attack.generate(x=x, y=y)
-        else:
-            raise Exception(f"{attack_config.attack_type} attacks not supported")
-
+        self.index = np.random.choice(len(self.attacks), p=self.probabilities)
+        self.active_attack = self.attacks[self.index]
+        x_adv = self.active_attack.generate(classifier, x, y)
         self.num_steps += 1
         return x_adv
-
-
-def get_evasion_attack(attack_name: str, classifier: PyTorchClassifier, attack_params: dict) -> EvasionAttack:
-    ctor = getattr(art.attacks.evasion, attack_name)
-    attack = ctor(classifier, **attack_params)
-    return attack
-
-
-def get_poisoning_attack(attack_name: str, classifier: PyTorchClassifier, attack_params: dict) -> PoisoningAttack:
-    ctor = getattr(art.attacks.poisoning, attack_name)
-    attack = ctor(classifier, **attack_params)
-    return attack
-
-
-def get_attacker_agent(config: dict) -> AttackerAgent:
-    attacker_attacks = config["attacker"]["attacks"]
-    attacks = []
-
-    for attack in attacker_attacks:
-        attack_type = attack["attack_type"]
-        attack_name = attack["attack_name"]
-        attack_params = attack["attack_params"]
-        attacks_config = AttackConfig(attack_type, attack_name, attack_params)
-        attacks.append(attacks_config)
-
-    probs = config["attacker"].get("probabilities", None)
-    if probs:
-        probs = np.array(probs) / np.sum(probs)
-    else:
-        probs = np.ones(len(attacks)) / len(attacks)
-
-    evasion_prob = config["attacker"].get("evasion_prob", None)
-
-    attacker_agent = AttackerAgent(attacks, probs, evasion_prob)
-    return attacker_agent
