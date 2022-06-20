@@ -60,8 +60,7 @@ class AresEnvironment(gym.Env):
 
         # check winner
         winner = None
-        out = classifier.predict(x_adv)
-        y_pred = classifier.reduce_labels(out)
+        y_pred = classifier.predict(x_adv)
         if detected:
             self.done = True
             winner = "defender"

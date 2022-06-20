@@ -1,5 +1,5 @@
-from .classifiers import get_classifier
+from .classifiers import Classifier
 from .defender_agent import DefenderAgent
 from .detector import Detector
 
-__all__ = ["DefenderAgent", "Detector", "get_classifier"]
+__all__ = ["Classifier", "DefenderAgent", "Detector"]

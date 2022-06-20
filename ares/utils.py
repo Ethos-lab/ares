@@ -3,7 +3,7 @@ import json
 import numpy as np
 
 from ares.attacker import Attack, AttackerAgent
-from ares.defender import DefenderAgent, Detector
+from ares.defender import Classifier, DefenderAgent, Detector
 from ares.environment import AresEnvironment
 from ares.scenario import EvaluationScenario
 
@@ -39,29 +39,31 @@ def get_attacker_agent(config: dict) -> AttackerAgent:
 
 
 def get_defender_agent(config: dict) -> DefenderAgent:
-    import torch
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
     defender_models = config["defender"]["models"]
     classifiers = []
 
-    for defender_model in defender_models:
-        model_file = defender_model["model_file"]
-        model_name = defender_model["model_name"]
-        model_params = defender_model["model_params"]
-        model_state = defender_model["model_state"]
-        classifier_type = defender_model["classifier_type"]
-        classifier_params = defender_model["classifier_params"]
-        model = get_torch_model(model_file, model_name, model_params, model_state, device)
-        classifier = get_classifier(model, classifier_type, classifier_params, device)
+    for model_config in defender_models:
+        model_file = model_config["model_file"]
+        model_name = model_config["model_name"]
+        model_params = model_config["model_params"]
+        model_state = model_config["model_state"]
+        classifier_type = model_config["classifier_type"]
+        classifier_params = model_config["classifier_params"]
+        classifier = Classifier(
+            model_file=model_file,
+            model_name=model_name,
+            model_params=model_params,
+            model_state=model_state,
+            classifier_type=classifier_type,
+            classifier_params=classifier_params,
+        )
         classifiers.append(classifier)
 
-    probs = config["defender"].get("probabilities", None)
-    if probs:
-        probs = np.array(probs) / np.sum(probs)
+    probabilities = config["defender"].get("probabilities", None)
+    if probabilities is None:
+        probabilities = np.ones(len(classifiers)) / len(classifiers)
     else:
-        probs = np.ones(len(classifiers)) / len(classifiers)
+        probabilities = np.array(probabilities) / np.sum(probabilities)
 
     detector_args = config["defender"].get("detector", None)
     if detector_args:
@@ -80,7 +82,7 @@ def get_defender_agent(config: dict) -> DefenderAgent:
     else:
         detector = None
 
-    defender_agent = DefenderAgent(classifiers, probs, detector)
+    defender_agent = DefenderAgent(classifiers, probabilities, detector)
     return defender_agent
 
 
@@ -95,7 +97,7 @@ def get_evaluation_scenario(config: dict) -> EvaluationScenario:
     return execution_scenario
 
 
-def create_environment(config: dict) -> AresEnvironment:
+def construct(config: dict) -> AresEnvironment:
     attacker = get_attacker_agent(config)
     defender = get_defender_agent(config)
     scenario = get_evaluation_scenario(config)

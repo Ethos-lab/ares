@@ -13,7 +13,7 @@ class Detector:
             ctor = getattr(module, name)
             self.module = ctor(**params)
         else:
-            raise ImportError(f"Error creating detector: cannot load {name} from {file}")
+            raise ImportError(f"Error loading detector: cannot load {name} from {file}")
 
         self.function = function
         self.probability = probability

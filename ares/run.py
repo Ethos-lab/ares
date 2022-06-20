@@ -2,7 +2,7 @@ import argparse
 
 import numpy as np
 
-from ares import create_environment, load_config
+from ares.utils import construct, load_config
 
 
 def get_args():
@@ -17,7 +17,7 @@ def run_simulation(args):
     config = load_config(args.config)
 
     # create environment
-    env = create_environment(config)
+    env = construct(config)
 
     episode_rewards = []
     for episode in range(env.scenario.num_episodes):
@@ -57,7 +57,3 @@ def run_simulation(args):
 def main():
     args = get_args()
     run_simulation(args)
-
-
-if __name__ == "__main__":
-    main()
