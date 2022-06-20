@@ -5,7 +5,7 @@ import numpy as np
 import torchvision
 
 
-class ExecutionScenario:
+class EvaluationScenario:
     def __init__(self, threat_model: str, dataroot: str, random_noise: bool, num_episodes: int, max_rounds: int):
         self.threat_model = threat_model
         self.dataroot = dataroot
@@ -36,3 +36,14 @@ class ExecutionScenario:
             x = x + noise
 
         return x, y
+
+
+def get_evaluation_scenario(config: dict) -> EvaluationScenario:
+    threat_model = config["scenario"]["threat_model"]
+    dataroot = config["scenario"]["dataroot"]
+    random_noise = config["scenario"]["random_noise"]
+    num_episodes = config["scenario"]["num_episodes"]
+    max_rounds = config["scenario"]["max_rounds"]
+
+    execution_scenario = EvaluationScenario(threat_model, dataroot, random_noise, num_episodes, max_rounds)
+    return execution_scenario

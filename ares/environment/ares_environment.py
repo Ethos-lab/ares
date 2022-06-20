@@ -6,13 +6,13 @@ import numpy as np
 
 from ares.attacker import AttackerAgent
 from ares.defender import DefenderAgent
-from ares.scenario import ExecutionScenario
+from ares.scenario import EvaluationScenario
 
 
-class AresEnv(gym.Env):
+class AresEnvironment(gym.Env):
     metadata = {"render.modes": ["console"]}
 
-    def __init__(self, attacker: AttackerAgent, defender: DefenderAgent, scenario: ExecutionScenario):
+    def __init__(self, attacker: AttackerAgent, defender: DefenderAgent, scenario: EvaluationScenario):
         self.n_agents = 2
         self.attacker = attacker
         self.defender = defender

@@ -6,15 +6,15 @@ import numpy as np
 
 
 class Detector:
-    def __init__(self, module: Any, fn_name: str, probability: float):
+    def __init__(self, module: Any, function: str, probability: float):
         self.module = module
-        self.fn_name = fn_name
+        self.function = function
         self.probability = probability
 
     def detect(self, x: np.ndarray) -> bool:
         p = np.random.rand()
         if p < self.probability:
-            detected = getattr(self.module, self.fn_name)(x)
+            detected = getattr(self.module, self.function)(x)
             return detected
         return False
 

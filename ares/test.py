@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-from ares import create_env, utils
+from ares import construct, load_config
 
 
 def main():
@@ -9,10 +9,10 @@ def main():
 
     # load config file
     config_path = "./configs/detector.json"
-    config = utils.get_config(config_path)
+    config = load_config(config_path)
 
     # create environment
-    env = create_env(config, device)
+    env = construct(config, device)
 
     episode_rewards = []
     for episode in range(env.scenario.num_episodes):

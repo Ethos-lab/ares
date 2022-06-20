@@ -64,3 +64,26 @@ def get_poisoning_attack(attack_name: str, classifier: PyTorchClassifier, attack
     ctor = getattr(art.attacks.poisoning, attack_name)
     attack = ctor(classifier, **attack_params)
     return attack
+
+
+def get_attacker_agent(config: dict) -> AttackerAgent:
+    attacker_attacks = config["attacker"]["attacks"]
+    attacks = []
+
+    for attack in attacker_attacks:
+        attack_type = attack["attack_type"]
+        attack_name = attack["attack_name"]
+        attack_params = attack["attack_params"]
+        attacks_config = AttackConfig(attack_type, attack_name, attack_params)
+        attacks.append(attacks_config)
+
+    probs = config["attacker"].get("probabilities", None)
+    if probs:
+        probs = np.array(probs) / np.sum(probs)
+    else:
+        probs = np.ones(len(attacks)) / len(attacks)
+
+    evasion_prob = config["attacker"].get("evasion_prob", None)
+
+    attacker_agent = AttackerAgent(attacks, probs, evasion_prob)
+    return attacker_agent
