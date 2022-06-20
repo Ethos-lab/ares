@@ -1,22 +1,10 @@
-from typing import Any, List, Optional
+from typing import List, Optional
 
 from art.estimators.classification import PyTorchClassifier
 from gym import spaces
 import numpy as np
 
-
-class Detector:
-    def __init__(self, module: Any, fn_name: str, probability: float):
-        self.module = module
-        self.fn_name = fn_name
-        self.probability = probability
-
-    def detect(self, x: np.ndarray) -> bool:
-        p = np.random.rand()
-        if p < self.probability:
-            detected = getattr(self.module, self.fn_name)(x)
-            return detected
-        return False
+from ares.defender.detector import Detector
 
 
 class DefenderAgent:

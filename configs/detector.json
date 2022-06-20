@@ -53,10 +53,10 @@
             }
         ],
         "detector": {
-            "detector_file": "./data/detectors/blackbox_detector.py",
-            "detector_name": "blackbox_detector",
-            "detector_function": "detect",
-            "detector_params": {},
+            "file": "./data/detectors/blackbox_detector.py",
+            "name": "blackbox_detector",
+            "function": "detect",
+            "params": {},
             "probability": 0.75
         }
     },

@@ -1,8 +1,7 @@
-import gym
 import numpy as np
 import torch
 
-from ares import utils
+from ares import create_env, utils
 
 
 def main():
@@ -13,13 +12,10 @@ def main():
     config = utils.get_config(config_path)
 
     # create environment
-    defender_agent = utils.get_defender_agent(config, device)
-    attacker_agent = utils.get_attacker_agent(config)
-    execution_scenario = utils.get_execution_scenario(config)
-    env = gym.make("AresEnv-v0", attacker=attacker_agent, defender=defender_agent, scenario=execution_scenario)
+    env = create_env(config, device)
 
     episode_rewards = []
-    for episode in range(execution_scenario.num_episodes):
+    for episode in range(env.scenario.num_episodes):
         print(f"=== Episode {episode + 1} ===")
 
         # initialize environment
@@ -42,7 +38,7 @@ def main():
 
             print(f"Step {step_count:2}: ({y[0]} | {y_pred[0]})")
 
-        print(f"Game end: {winner} wins after {episode} rounds")
+        print(f"Game end: {winner} wins after {reward} rounds")
         episode_rewards.append(reward)
 
     # scenario stats

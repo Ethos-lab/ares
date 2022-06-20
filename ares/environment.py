@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import List, Tuple
 
 import gym
 from gym import spaces
@@ -20,7 +20,7 @@ class AresEnv(gym.Env):
         self.done = False
         self.step_count = 0
         self.reward = 0
-        self.episode_rewards = []
+        self.episode_rewards: List[int] = []
         self.action_space = spaces.Discrete(1)
         self.observation_space = spaces.Dict({})
 

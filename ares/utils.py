@@ -50,26 +50,7 @@ def get_classifier(
     return classifier
 
 
-def get_detector(detector_args: dict) -> "defender.Detector":
-    detector_file = detector_args.get("detector_file", None)
-    detector_name = detector_args.get("detector_name", None)
-    detector_fn = detector_args.get("detector_function", None)
-    detector_params = detector_args.get("detector_params", None)
-    probability = detector_args.get("probability", None)
-
-    spec = importlib.util.spec_from_file_location("module.name", detector_file)
-    if spec and spec.loader:
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        ctor = getattr(module, detector_name)
-        model = ctor(**detector_params)
-        detector = defender.Detector(model, detector_fn, probability)
-        return detector
-    else:
-        raise ImportError(f"cannot load {detector_name} from {detector_file}")
-
-
-def get_defender_agent(config: dict, device: torch.device) -> "defender.DefenderAgent":
+def get_defender_agent(config: dict, device: torch.device) -> defender.DefenderAgent:
     defender_models = config["defender"]["models"]
     classifiers = []
 
@@ -92,7 +73,8 @@ def get_defender_agent(config: dict, device: torch.device) -> "defender.Defender
 
     detector_args = config["defender"].get("detector", None)
     if detector_args:
-        detector = get_detector(detector_args)
+        detector_config = defender.DetectorConfig(**detector_args)
+        detector = defender.get_detector(detector_config)
     else:
         detector = None
 
@@ -100,7 +82,7 @@ def get_defender_agent(config: dict, device: torch.device) -> "defender.Defender
     return defender_agent
 
 
-def get_attacker_agent(config: dict) -> "attacker.AttackerAgent":
+def get_attacker_agent(config: dict) -> attacker.AttackerAgent:
     attacker_attacks = config["attacker"]["attacks"]
     attacks = []
 
@@ -123,7 +105,7 @@ def get_attacker_agent(config: dict) -> "attacker.AttackerAgent":
     return attacker_agent
 
 
-def get_execution_scenario(config: dict) -> "scenario.ExecutionScenario":
+def get_execution_scenario(config: dict) -> scenario.ExecutionScenario:
     threat_model = config["scenario"]["threat_model"]
     dataroot = config["scenario"]["dataroot"]
     random_noise = config["scenario"]["random_noise"]
