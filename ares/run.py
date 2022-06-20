@@ -1,18 +1,23 @@
+import argparse
+
 import numpy as np
-import torch
 
-from ares import construct, load_config
+from ares import create_environment, load_config
 
 
-def main():
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def get_args():
+    parser = argparse.ArgumentParser(description="Ares default simulation run.")
+    parser.add_argument("config", type=str, help="JSON config file path")
+    args = parser.parse_args()
+    return args
 
+
+def run_simulation(args):
     # load config file
-    config_path = "./configs/detector.json"
-    config = load_config(config_path)
+    config = load_config(args.config)
 
     # create environment
-    env = construct(config, device)
+    env = create_environment(config)
 
     episode_rewards = []
     for episode in range(env.scenario.num_episodes):
@@ -47,6 +52,11 @@ def main():
     stddev = np.std(episode_rewards)
     median = np.median(episode_rewards)
     print(f"mean: {mean}, stddev: {stddev:.3f}, median: {median}")
+
+
+def main():
+    args = get_args()
+    run_simulation(args)
 
 
 if __name__ == "__main__":

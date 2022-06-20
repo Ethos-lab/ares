@@ -34,9 +34,11 @@ class DefenderAgent:
         return False
 
 
-def get_defender_agent(config: dict, device: torch.device) -> DefenderAgent:
+def get_defender_agent(config: dict) -> DefenderAgent:
     defender_models = config["defender"]["models"]
     classifiers = []
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     for defender_model in defender_models:
         model_file = defender_model["model_file"]

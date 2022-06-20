@@ -11,7 +11,8 @@ install_requires = [
 dev_requires = ["pytest", "tox"]
 sklearn_requires = ["scikit-learn"]
 torch_requires = ["torch", "torchvision"]
-tf_requires = ["tensorflow"]
+tf_requires = ["tensorflow", "h5py"]
+keras_requires = ["keras", "h5py"]
 art_requires = ["adversarial-robustness-toolbox"]
 all_requires = dev_requires + sklearn_requires + torch_requires + tf_requires + art_requires
 
@@ -31,9 +32,16 @@ setup(
         "torch": torch_requires,
         "tensorflow": tf_requires,
         "tf": tf_requires,
+        "keras": keras_requires,
         "adversarial-robustness-toolbox": art_requires,
         "art": art_requires,
         "all": all_requires,
     },
-    packages=find_packages(),
+    packages=find_packages(exclude=["test", "test.*"]),
+    include_package_data=True,
+    entry_points={
+        "console_scripts": [
+            "ares=ares:main",
+        ]
+    },
 )

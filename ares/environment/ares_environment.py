@@ -4,19 +4,19 @@ import gym
 from gym import spaces
 import numpy as np
 
-from ares.attacker import AttackerAgent
-from ares.defender import DefenderAgent
-from ares.scenario import EvaluationScenario
+from ares.attacker import AttackerAgent, get_attacker_agent
+from ares.defender import DefenderAgent, get_defender_agent
+from ares.scenario import EvaluationScenario, get_evaluation_scenario
 
 
 class AresEnvironment(gym.Env):
     metadata = {"render.modes": ["console"]}
 
     def __init__(self, attacker: AttackerAgent, defender: DefenderAgent, scenario: EvaluationScenario):
-        self.n_agents = 2
         self.attacker = attacker
         self.defender = defender
         self.scenario = scenario
+        self.n_agents = 2
         self.done = False
         self.step_count = 0
         self.reward = 0
@@ -93,3 +93,11 @@ class AresEnvironment(gym.Env):
 
     def close(self) -> None:
         return
+
+
+def create_environment(config: dict) -> AresEnvironment:
+    attacker = get_attacker_agent(config)
+    defender = get_defender_agent(config)
+    scenario = get_evaluation_scenario(config)
+    env = AresEnvironment(attacker, defender, scenario)
+    return env
