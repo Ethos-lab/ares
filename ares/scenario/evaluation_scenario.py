@@ -1,30 +1,26 @@
 from typing import List, Tuple
 
 import numpy as np
-import torchvision
 
 from ares.defender import Classifier
+from ares.scenario.datasets import Dataset
 
 
 class EvaluationScenario:
-    def __init__(self, threat_model: str, dataroot: str, random_noise: bool, num_episodes: int, max_rounds: int):
+    def __init__(self, threat_model: str, num_episodes: int, max_rounds: int, dataset: dict):
         self.threat_model = threat_model
-        self.dataroot = dataroot
-        self.random_noise = random_noise
         self.num_episodes = num_episodes
         self.max_rounds = max_rounds
+        self.random_noise = dataset.get("random_noise", False)
 
-        transforms = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])
-        # TODO: replace CIFAR10 dataset with generic dataset
-        self.dataset = torchvision.datasets.CIFAR10(root=dataroot, train=False, transform=transforms, download=True)
+        name = dataset["name"]
+        dataroot = dataset["dataroot"]
+        self.dataset = Dataset(name, dataroot)
 
     def get_valid_sample(self, classifiers: List[Classifier]) -> Tuple[np.ndarray, np.ndarray]:
         all_correct = False
         while not all_correct:
-            choice = np.random.choice(len(self.dataset))
-            sample = self.dataset[choice]
-            x = np.expand_dims(sample[0].numpy(), axis=0)
-            y = np.array([sample[1]])
+            x, y = self.dataset.sample()
             all_correct = True
             for classifier in classifiers:
                 y_pred = classifier.predict(x)

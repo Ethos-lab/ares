@@ -43,19 +43,16 @@ def get_defender_agent(config: dict) -> DefenderAgent:
     classifiers = []
 
     for model_config in defender_models:
-        model_file = model_config["model_file"]
-        model_name = model_config["model_name"]
-        model_params = model_config["model_params"]
-        model_state = model_config["model_state"]
-        classifier_type = model_config["classifier_type"]
-        classifier_params = model_config["classifier_params"]
+        model_file = model_config["file"]
+        model_name = model_config["name"]
+        model_params = model_config["params"]
+        model_checkpoint = model_config["checkpoint"]
         classifier = Classifier(
-            model_file=model_file,
-            model_name=model_name,
-            model_params=model_params,
-            model_state=model_state,
-            classifier_type=classifier_type,
-            classifier_params=classifier_params,
+            file=model_file,
+            name=model_name,
+            params=model_params,
+            checkpoint=model_checkpoint,
+            dataset_params=config["scenario"]["dataset"],
         )
         classifiers.append(classifier)
 
@@ -88,12 +85,11 @@ def get_defender_agent(config: dict) -> DefenderAgent:
 
 def get_evaluation_scenario(config: dict) -> EvaluationScenario:
     threat_model = config["scenario"]["threat_model"]
-    dataroot = config["scenario"]["dataroot"]
-    random_noise = config["scenario"].get("random_noise", False)
     num_episodes = config["scenario"]["num_episodes"]
     max_rounds = config["scenario"]["max_rounds"]
+    dataset = config["scenario"]["dataset"]
 
-    execution_scenario = EvaluationScenario(threat_model, dataroot, random_noise, num_episodes, max_rounds)
+    execution_scenario = EvaluationScenario(threat_model, num_episodes, max_rounds, dataset)
     return execution_scenario
 
 
