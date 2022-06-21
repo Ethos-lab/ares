@@ -1,25 +1,26 @@
-import gym
+import argparse
+
 import numpy as np
-import torch
 
-from ares import utils
+from ares.utils import construct, load_config
 
 
-def main():
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def get_args():
+    parser = argparse.ArgumentParser(description="Ares default simulation run.")
+    parser.add_argument("config", type=str, help="JSON config file path")
+    args = parser.parse_args()
+    return args
 
+
+def run_simulation(args):
     # load config file
-    config_path = "./configs/detector.json"
-    config = utils.get_config(config_path)
+    config = load_config(args.config)
 
     # create environment
-    defender_agent = utils.get_defender_agent(config, device)
-    attacker_agent = utils.get_attacker_agent(config)
-    execution_scenario = utils.get_execution_scenario(config)
-    env = gym.make("AresEnv-v0", attacker=attacker_agent, defender=defender_agent, scenario=execution_scenario)
+    env = construct(config)
 
     episode_rewards = []
-    for episode in range(execution_scenario.num_episodes):
+    for episode in range(env.scenario.num_episodes):
         print(f"=== Episode {episode + 1} ===")
 
         # initialize environment
@@ -42,7 +43,7 @@ def main():
 
             print(f"Step {step_count:2}: ({y[0]} | {y_pred[0]})")
 
-        print(f"Game end: {winner} wins after {episode} rounds")
+        print(f"Game end: {winner} wins after {reward} rounds")
         episode_rewards.append(reward)
 
     # scenario stats
@@ -53,5 +54,6 @@ def main():
     print(f"mean: {mean}, stddev: {stddev:.3f}, median: {median}")
 
 
-if __name__ == "__main__":
-    main()
+def main():
+    args = get_args()
+    run_simulation(args)

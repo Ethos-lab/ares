@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import List, Tuple
 
 import gym
 from gym import spaces
@@ -6,21 +6,21 @@ import numpy as np
 
 from ares.attacker import AttackerAgent
 from ares.defender import DefenderAgent
-from ares.scenario import ExecutionScenario
+from ares.scenario import EvaluationScenario
 
 
-class AresEnv(gym.Env):
+class AresEnvironment(gym.Env):
     metadata = {"render.modes": ["console"]}
 
-    def __init__(self, attacker: AttackerAgent, defender: DefenderAgent, scenario: ExecutionScenario):
-        self.n_agents = 2
+    def __init__(self, attacker: AttackerAgent, defender: DefenderAgent, scenario: EvaluationScenario):
         self.attacker = attacker
         self.defender = defender
         self.scenario = scenario
+        self.n_agents = 2
         self.done = False
         self.step_count = 0
         self.reward = 0
-        self.episode_rewards = []
+        self.episode_rewards: List[int] = []
         self.action_space = spaces.Discrete(1)
         self.observation_space = spaces.Dict({})
 
@@ -60,8 +60,7 @@ class AresEnv(gym.Env):
 
         # check winner
         winner = None
-        out = classifier.predict(x_adv)
-        y_pred = classifier.reduce_labels(out)
+        y_pred = classifier.predict(x_adv)
         if detected:
             self.done = True
             winner = "defender"

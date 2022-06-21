@@ -3,20 +3,18 @@
         "attacks": [
             {
                 "type": "evasion",
-                "name": "ProjectedGradientDescent",
+                "name": "HopSkipJump",
                 "params": {
                     "norm": "inf",
-                    "eps": 0.03137254901,
-                    "eps_step": 0.00784313725,
-                    "num_random_init": 0,
-                    "max_iter": 1,
+                    "max_iter": 0,
+                    "max_eval": 1,
+                    "init_eval": 1,
                     "targeted": false,
                     "batch_size": 1,
                     "verbose": false
                 }
             }
-        ],
-        "evasion_probability": 0.1
+        ]
     },
     "defender": {
         "probabilities": [0.3, 0.7],
@@ -37,17 +35,10 @@
                 },
                 "checkpoint": "./data/state_dicts/resnet18_adv.pth"
             }
-        ],
-        "detector": {
-            "file": "./data/detectors/blackbox_detector.py",
-            "name": "blackbox_detector",
-            "function": "detect",
-            "params": {},
-            "probability": 0.75
-        }
+        ]
     },
     "scenario": {
-        "threat_model": "whitebox",
+        "threat_model": "blackbox",
         "num_episodes": 50,
         "max_rounds": 50,
         "dataset": {

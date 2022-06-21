@@ -1,134 +1,101 @@
-import importlib
-import importlib.util
 import json
 
-import art
-from art.estimators.classification import PyTorchClassifier
 import numpy as np
-import torch
-import torch.nn as nn
 
-from ares import attacker, defender, scenario
+from ares.attacker import Attack, AttackerAgent
+from ares.defender import Classifier, DefenderAgent, Detector
+from ares.environment import AresEnvironment
+from ares.scenario import EvaluationScenario
 
 
-def get_config(path: str):
+def load_config(path: str) -> dict:
     with open(path, "r") as f:
         config = json.load(f)
     # TODO: validate config file
     return config
 
 
-def get_torch_model(
-    model_file: str, model_name: str, model_params: dict, model_state: str, device: torch.device
-) -> nn.Module:
-    spec = importlib.util.spec_from_file_location("module.name", model_file)
-    if spec and spec.loader:
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        ctor = getattr(module, model_name)
-        model: nn.Module = ctor(**model_params)
-
-        state_dict = torch.load(model_state, map_location=device)
-        model.load_state_dict(state_dict)
-        model.to(device)
-        model.eval()
-        return model
-    else:
-        raise ImportError(f"cannot load {model_name} from {model_file}")
-
-
-def get_classifier(
-    model: nn.Module, classifier_type: str, classifier_params: dict, device: torch.device
-) -> PyTorchClassifier:
-    components = classifier_params["loss"].split(".")
-    module = importlib.import_module(".".join(components[:-1]))
-    loss_fn = getattr(module, components[-1])
-    classifier_params["loss"] = loss_fn()
-
-    ctor = getattr(art.estimators.classification, classifier_type)
-    classifier = ctor(model, device_type=device.type, **classifier_params)
-    return classifier
-
-
-def get_detector(detector_args: dict) -> "defender.Detector":
-    detector_file = detector_args.get("detector_file", None)
-    detector_name = detector_args.get("detector_name", None)
-    detector_fn = detector_args.get("detector_function", None)
-    detector_params = detector_args.get("detector_params", None)
-    probability = detector_args.get("probability", None)
-
-    spec = importlib.util.spec_from_file_location("module.name", detector_file)
-    if spec and spec.loader:
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        ctor = getattr(module, detector_name)
-        model = ctor(**detector_params)
-        detector = defender.Detector(model, detector_fn, probability)
-        return detector
-    else:
-        raise ImportError(f"cannot load {detector_name} from {detector_file}")
-
-
-def get_defender_agent(config: dict, device: torch.device) -> "defender.DefenderAgent":
-    defender_models = config["defender"]["models"]
-    classifiers = []
-
-    for defender_model in defender_models:
-        model_file = defender_model["model_file"]
-        model_name = defender_model["model_name"]
-        model_params = defender_model["model_params"]
-        model_state = defender_model["model_state"]
-        classifier_type = defender_model["classifier_type"]
-        classifier_params = defender_model["classifier_params"]
-        model = get_torch_model(model_file, model_name, model_params, model_state, device)
-        classifier = get_classifier(model, classifier_type, classifier_params, device)
-        classifiers.append(classifier)
-
-    probs = config["defender"].get("probabilities", None)
-    if probs:
-        probs = np.array(probs) / np.sum(probs)
-    else:
-        probs = np.ones(len(classifiers)) / len(classifiers)
-
-    detector_args = config["defender"].get("detector", None)
-    if detector_args:
-        detector = get_detector(detector_args)
-    else:
-        detector = None
-
-    defender_agent = defender.DefenderAgent(classifiers, probs, detector)
-    return defender_agent
-
-
-def get_attacker_agent(config: dict) -> "attacker.AttackerAgent":
+def get_attacker_agent(config: dict) -> AttackerAgent:
     attacker_attacks = config["attacker"]["attacks"]
     attacks = []
 
-    for attack in attacker_attacks:
-        attack_type = attack["attack_type"]
-        attack_name = attack["attack_name"]
-        attack_params = attack["attack_params"]
-        attacks_config = attacker.AttackConfig(attack_type, attack_name, attack_params)
-        attacks.append(attacks_config)
+    for attack_config in attacker_attacks:
+        attack_type = attack_config["type"]
+        attack_name = attack_config["name"]
+        attack_params = attack_config["params"]
+        attack = Attack(attack_type, attack_name, attack_params)
+        attacks.append(attack)
 
-    probs = config["attacker"].get("probabilities", None)
-    if probs:
-        probs = np.array(probs) / np.sum(probs)
+    probabilities = config["attacker"].get("probabilities", None)
+    if probabilities is None:
+        probabilities = np.ones(len(attacks)) / len(attacks)
     else:
-        probs = np.ones(len(attacks)) / len(attacks)
+        probabilities = np.array(probabilities) / np.sum(probabilities)
 
-    evasion_prob = config["attacker"].get("evasion_prob", None)
+    evasion_probability = config["attacker"].get("evasion_probability", None)
 
-    attacker_agent = attacker.AttackerAgent(attacks, probs, evasion_prob)
+    attacker_agent = AttackerAgent(attacks, probabilities, evasion_probability)
     return attacker_agent
 
 
-def get_execution_scenario(config: dict) -> "scenario.ExecutionScenario":
+def get_defender_agent(config: dict) -> DefenderAgent:
+    defender_models = config["defender"]["models"]
+    classifiers = []
+
+    for model_config in defender_models:
+        model_file = model_config["file"]
+        model_name = model_config["name"]
+        model_params = model_config["params"]
+        model_checkpoint = model_config["checkpoint"]
+        classifier = Classifier(
+            file=model_file,
+            name=model_name,
+            params=model_params,
+            checkpoint=model_checkpoint,
+            dataset_params=config["scenario"]["dataset"],
+        )
+        classifiers.append(classifier)
+
+    probabilities = config["defender"].get("probabilities", None)
+    if probabilities is None:
+        probabilities = np.ones(len(classifiers)) / len(classifiers)
+    else:
+        probabilities = np.array(probabilities) / np.sum(probabilities)
+
+    detector_args = config["defender"].get("detector", None)
+    if detector_args:
+        detector_file = detector_args["file"]
+        detector_name = detector_args["name"]
+        detector_function = detector_args.get("function", "detect")
+        detector_params = detector_args.get("params", {})
+        detector_probability = detector_args.get("probability", 1.0)
+        detector = Detector(
+            file=detector_file,
+            name=detector_name,
+            function=detector_function,
+            params=detector_params,
+            probability=detector_probability,
+        )
+    else:
+        detector = None
+
+    defender_agent = DefenderAgent(classifiers, probabilities, detector)
+    return defender_agent
+
+
+def get_evaluation_scenario(config: dict) -> EvaluationScenario:
     threat_model = config["scenario"]["threat_model"]
-    dataroot = config["scenario"]["dataroot"]
-    random_noise = config["scenario"]["random_noise"]
     num_episodes = config["scenario"]["num_episodes"]
     max_rounds = config["scenario"]["max_rounds"]
+    dataset = config["scenario"]["dataset"]
 
-    execution_scenario = scenario.ExecutionScenario(threat_model, dataroot, random_noise, num_episodes, max_rounds)
+    execution_scenario = EvaluationScenario(threat_model, num_episodes, max_rounds, dataset)
     return execution_scenario
+
+
+def construct(config: dict) -> AresEnvironment:
+    attacker = get_attacker_agent(config)
+    defender = get_defender_agent(config)
+    scenario = get_evaluation_scenario(config)
+    env = AresEnvironment(attacker, defender, scenario)
+    return env
