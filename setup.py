@@ -23,6 +23,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
+    url="https://github.com/Ethos-lab/ares",
     install_requires=install_requires,
     extras_require={
         "dev": dev_requires,
