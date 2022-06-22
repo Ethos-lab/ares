@@ -9,10 +9,11 @@ from ares.defender import Classifier
 
 
 class Attack:
-    def __init__(self, type: str, name: str, params: dict):
+    def __init__(self, type: str, name: str, params: dict, epsilon_constraint: bool = True):
         self.type = type
         self.name = name
         self.params = params
+        self.epsilon_constraint = epsilon_constraint
         self.norm = params.get("norm", "inf")
         self.eps = params.get("eps", 8 / 255)
 
@@ -26,15 +27,15 @@ class Attack:
 
         if self.norm == "inf":
             eps = np.linalg.norm(np.abs(x_adv - x).ravel(), ord=np.inf)
-        elif self.norm == "l1":
+        elif self.norm in (1, "1", "l1"):
             eps = np.linalg.norm(np.abs(x_adv - x).ravel(), ord=1)
-        elif self.norm == "l2":
+        elif self.norm in (2, "2", "l2"):
             eps = np.linalg.norm(np.abs(x_adv - x).ravel(), ord=2)
         else:
             raise ValueError(f"Error generating attack: {self.norm} norm not supported")
 
         # Enforce epsilon constraint
-        if eps > self.eps:
+        if self.epsilon_constraint and eps > self.eps:
             raise ValueError("Error generating attack: epsilon constraint violated")
 
         return x_adv, eps

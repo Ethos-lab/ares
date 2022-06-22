@@ -12,7 +12,8 @@
                     "targeted": false,
                     "batch_size": 1,
                     "verbose": false
-                }
+                },
+                "epsilon_constraint": false
             }
         ]
     },
