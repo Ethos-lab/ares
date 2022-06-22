@@ -38,10 +38,18 @@ def run_simulation(args):
             observation, reward, done, info = env.step(action)
             x = observation["x_adv"]
             y_pred = observation["y_pred"]
+            eps = observation["eps"]
+            evaded = observation["evaded"]
+            detected = observation["detected"]
             winner = observation["winner"]
             step_count = info["step_count"]
 
-            print(f"Step {step_count:2}: ({y[0]} | {y_pred[0]})")
+            if evaded:
+                print(f"Step {step_count:2}: ({y[0]} | {y_pred[0]}), eps = {eps:.6f}, attacker evaded")
+            elif detected:
+                print(f"Step {step_count:2}: ({y[0]} | {y_pred[0]}), eps = {eps:.6f}, attacker was detected")
+            else:
+                print(f"Step {step_count:2}: ({y[0]} | {y_pred[0]}), eps = {eps:.6f}")
 
         print(f"Game end: {winner} wins after {reward} rounds")
         episode_rewards.append(reward)
