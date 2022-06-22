@@ -22,8 +22,9 @@ def get_attacker_agent(config: dict) -> AttackerAgent:
     for attack_config in attacker_attacks:
         attack_type = attack_config["type"]
         attack_name = attack_config["name"]
-        attack_params = attack_config["params"]
-        attack = Attack(attack_type, attack_name, attack_params)
+        attack_params = attack_config.get("params", {})
+        epsilon_constraint = attack_config.get("epsilon_constraint", True)
+        attack = Attack(attack_type, attack_name, attack_params, epsilon_constraint)
         attacks.append(attack)
 
     probabilities = config["attacker"].get("probabilities", None)
@@ -45,7 +46,7 @@ def get_defender_agent(config: dict) -> DefenderAgent:
     for model_config in defender_models:
         model_file = model_config["file"]
         model_name = model_config["name"]
-        model_params = model_config["params"]
+        model_params = model_config.get("params", {})
         model_checkpoint = model_config["checkpoint"]
         classifier = Classifier(
             file=model_file,

@@ -49,12 +49,12 @@ class AresEnvironment(gym.Env):
 
         # attacker turn
         self.attacker.update_policy({})
-        x_adv = self.attacker.attack(classifier, x, y)
+        x_adv, eps, evaded = self.attacker.attack(classifier, x, y)
 
         # run detector if not evading
-        if x_adv is None:
-            x_adv = x
+        if evaded:
             detected = False
+            x_adv = x
         else:
             detected = self.defender.detect(x_adv)
 
@@ -76,6 +76,9 @@ class AresEnvironment(gym.Env):
             "y": y,
             "x_adv": x_adv,
             "y_pred": y_pred,
+            "eps": eps,
+            "evaded": evaded,
+            "detected": detected,
             "winner": winner,
         }
         info = {

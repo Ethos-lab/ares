@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from art.estimators.classification import PyTorchClassifier
 from gym import spaces
@@ -22,19 +22,19 @@ class AttackerAgent:
     def update_policy(self, observation: dict):
         pass
 
-    def evade(self):
+    def evade(self) -> bool:
         if self.evasion_probability is not None:
             p = np.random.rand()
             return p < self.evasion_probability
         return False
 
-    def attack(self, classifier: PyTorchClassifier, x: np.ndarray, y: np.ndarray) -> Optional[np.ndarray]:
+    def attack(self, classifier: PyTorchClassifier, x: np.ndarray, y: np.ndarray) -> Tuple[np.ndarray, float, bool]:
         evade_turn = self.evade()
         if evade_turn:
-            return None
+            return x, 0, True
 
         self.index = np.random.choice(len(self.attacks), p=self.probabilities)
         self.active_attack = self.attacks[self.index]
-        x_adv = self.active_attack.generate(classifier, x, y)
+        x_adv, eps = self.active_attack.generate(classifier, x, y)
         self.num_steps += 1
-        return x_adv
+        return x_adv, eps, False
