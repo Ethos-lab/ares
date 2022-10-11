@@ -13,7 +13,10 @@
                     "batch_size": 1,
                     "verbose": false
                 },
-                "epsilon_constraint": false
+                "epsilon_constraint": {
+                    "norm": "inf",
+                    "eps": 0.03137254901
+                }
             }
         ]
     },

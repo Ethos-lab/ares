@@ -24,6 +24,7 @@ class DefenderAgent:
     def defend(self) -> Classifier:
         self.index = np.random.choice(len(self.classifiers), p=self.probabilities)
         self.active_classifier = self.classifiers[self.index]
+        self.active_classifier.reset()
         return self.active_classifier
 
     def detect(self, x: np.ndarray) -> bool:

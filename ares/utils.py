@@ -23,7 +23,7 @@ def get_attacker_agent(config: dict) -> AttackerAgent:
         attack_type = attack_config["type"]
         attack_name = attack_config["name"]
         attack_params = attack_config.get("params", {})
-        epsilon_constraint = attack_config.get("epsilon_constraint", True)
+        epsilon_constraint = attack_config.get("epsilon_constraint", None)
         attack = Attack(attack_type, attack_name, attack_params, epsilon_constraint)
         attacks.append(attack)
 

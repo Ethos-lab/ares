@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Optional
 
 import art
 from art.attacks.attack import EvasionAttack, PoisoningAttack
@@ -9,13 +9,14 @@ from ares.defender import Classifier
 
 
 class Attack:
-    def __init__(self, type: str, name: str, params: dict, epsilon_constraint: bool = True):
+    def __init__(self, type: str, name: str, params: dict, epsilon_constraint: Optional[dict]):
         self.type = type
         self.name = name
         self.params = params
-        self.epsilon_constraint = epsilon_constraint
-        self.norm = params.get("norm", "inf")
-        self.eps = params.get("eps", 8 / 255)
+        if epsilon_constraint:
+            self.epsilon_constraint = True
+            self.norm = epsilon_constraint.get("norm", "inf")
+            self.eps = epsilon_constraint.get("eps", 8 / 255)
 
     def generate(self, classifier: Classifier, x: np.ndarray, y: np.ndarray) -> Tuple[np.ndarray, float]:
         # only supports evasion attacks for now
