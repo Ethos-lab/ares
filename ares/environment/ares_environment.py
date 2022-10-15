@@ -76,6 +76,8 @@ class AresEnvironment(gym.Env):
             winner = "defender"
 
         observation = {
+            "defense": self.defender.current_defense(),
+            "attack": self.attacker.current_attack(),
             "x": x,
             "y": y,
             "x_adv": x_adv,

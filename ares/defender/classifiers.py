@@ -9,9 +9,10 @@ import torch.nn as nn
 
 class ModelWrapper(nn.Module):
     def __init__(self, model: nn.Module):
+        super().__init__()
         self.model = model
         self.queries = 0
-    
+
     def reset(self):
         self.queries = 0
 
@@ -23,6 +24,7 @@ class ModelWrapper(nn.Module):
 class Classifier:
     def __init__(self, file: str, name: str, params: dict, checkpoint: str, dataset_params: dict):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.name = name
 
         spec = importlib.util.spec_from_file_location("module.name", file)
         if spec and spec.loader:
@@ -46,10 +48,10 @@ class Classifier:
         self.classifier = PyTorchClassifier(
             model=self.model, loss=loss, input_shape=input_shape, nb_classes=num_classes, clip_values=clip_values
         )
-    
+
     def reset(self):
         self.model.reset()
-    
+
     def queries(self):
         return self.model.queries
 

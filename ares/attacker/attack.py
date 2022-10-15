@@ -1,4 +1,4 @@
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 import art
 from art.attacks.attack import EvasionAttack, PoisoningAttack
@@ -13,10 +13,15 @@ class Attack:
         self.type = type
         self.name = name
         self.params = params
+        self.norm = params.get("norm", "inf")
+        self.eps = params.get("eps", 8 / 255)
+
         if epsilon_constraint:
             self.epsilon_constraint = True
-            self.norm = epsilon_constraint.get("norm", "inf")
-            self.eps = epsilon_constraint.get("eps", 8 / 255)
+            self.norm = epsilon_constraint.get("norm", self.norm)
+            self.eps = epsilon_constraint.get("eps", self.eps)
+        else:
+            self.epsilon_constraint = False
 
     def generate(self, classifier: Classifier, x: np.ndarray, y: np.ndarray) -> Tuple[np.ndarray, float]:
         # only supports evasion attacks for now
