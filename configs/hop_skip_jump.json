@@ -1,28 +1,15 @@
 {
     "attacker": {
-        "probabilities": [0.5, 0.5],
         "attacks": [
             {
                 "type": "evasion",
-                "name": "ProjectedGradientDescent",
+                "name": "HopSkipJump",
                 "params": {
                     "norm": "inf",
-                    "eps": 0.03137254901,
-                    "eps_step": 0.00784313725,
-                    "num_random_init": 0,
-                    "max_iter": 1,
+                    "max_iter": 0,
+                    "max_eval": 1,
+                    "init_eval": 1,
                     "targeted": false,
-                    "batch_size": 1,
-                    "verbose": false
-                }
-            },
-            {
-                "type": "evasion",
-                "name": "SquareAttack",
-                "params": {
-                    "norm": "inf",
-                    "eps": 0.03137254901,
-                    "max_iter": 1,
                     "batch_size": 1,
                     "verbose": false
                 }
@@ -51,7 +38,7 @@
         ]
     },
     "scenario": {
-        "threat_model": "whitebox",
+        "threat_model": "blackbox",
         "num_episodes": 50,
         "max_rounds": 50,
         "dataset": {

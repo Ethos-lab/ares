@@ -152,6 +152,7 @@ cython_debug/
 #.idea/
 
 # Other
+*.DS_Store
 data/
 models/
 state_dicts/

@@ -19,6 +19,7 @@ class AresEnvironment(gym.Env):
         self.n_agents = 2
         self.done = False
         self.step_count = 0
+        self.queries = 0
         self.reward = 0
         self.episode_rewards: List[int] = []
         self.action_space = spaces.Discrete(1)
@@ -27,6 +28,7 @@ class AresEnvironment(gym.Env):
     def reset(self) -> dict:
         self.done = False
         self.step_count = 0
+        self.queries = 0
         self.reward = 0
 
         x, y = self.scenario.get_valid_sample(self.defender.classifiers)
@@ -50,6 +52,8 @@ class AresEnvironment(gym.Env):
         # attacker turn
         self.attacker.update_policy({})
         x_adv, eps, evaded = self.attacker.attack(classifier, x, y)
+        queries = classifier.queries()
+        self.queries += queries
 
         # run detector if not evading
         if evaded:
@@ -72,6 +76,8 @@ class AresEnvironment(gym.Env):
             winner = "defender"
 
         observation = {
+            "defense": self.defender.current_defense(),
+            "attack": self.attacker.current_attack(),
             "x": x,
             "y": y,
             "x_adv": x_adv,
@@ -84,6 +90,7 @@ class AresEnvironment(gym.Env):
         info = {
             "description": "",
             "step_count": self.step_count,
+            "queries": self.queries,
         }
         self.reward = self.step_count
         self.episode_rewards.append(self.reward)

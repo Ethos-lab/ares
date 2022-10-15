@@ -3,17 +3,14 @@
         "attacks": [
             {
                 "type": "evasion",
-                "name": "HopSkipJump",
+                "name": "SquareAttack",
                 "params": {
                     "norm": "inf",
-                    "max_iter": 0,
-                    "max_eval": 1,
-                    "init_eval": 1,
-                    "targeted": false,
+                    "eps": 0.03137254901,
+                    "max_iter": 1,
                     "batch_size": 1,
                     "verbose": false
-                },
-                "epsilon_constraint": false
+                }
             }
         ]
     },
@@ -48,7 +45,7 @@
             "num_classes": 10,
             "clip_values": [0, 1],
             "random_noise": true,
-            "dataroot": "./data"
+            "dataroot": "./data/cifar10"
         }
     }
 }

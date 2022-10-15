@@ -20,6 +20,7 @@ def run_simulation(args):
     env = construct(config)
 
     episode_rewards = []
+    episode_queries = []
     for episode in range(env.scenario.num_episodes):
         print(f"=== Episode {episode + 1} ===")
 
@@ -36,6 +37,8 @@ def run_simulation(args):
                 "y": y,
             }
             observation, reward, done, info = env.step(action)
+            defense = observation["defense"]
+            attack = observation["attack"]
             x = observation["x_adv"]
             y_pred = observation["y_pred"]
             eps = observation["eps"]
@@ -43,23 +46,31 @@ def run_simulation(args):
             detected = observation["detected"]
             winner = observation["winner"]
             step_count = info["step_count"]
+            queries = info["queries"]
 
+            print(f"Round {step_count:2}: defense = {defense}, attack = {attack}")
+            print(f"\t [label = {y[0]} | pred = {y_pred[0]}], eps = {eps:.6f}, queries = {queries}")
             if evaded:
-                print(f"Step {step_count:2}: ({y[0]} | {y_pred[0]}), eps = {eps:.6f}, attacker evaded")
+                print("\t attacker evaded")
             elif detected:
-                print(f"Step {step_count:2}: ({y[0]} | {y_pred[0]}), eps = {eps:.6f}, attacker was detected")
-            else:
-                print(f"Step {step_count:2}: ({y[0]} | {y_pred[0]}), eps = {eps:.6f}")
+                print("\t attacker was detected")
 
-        print(f"Game end: {winner} wins after {reward} rounds")
+        print(f"Game end: {winner} wins after {reward} rounds and {queries} queries")
         episode_rewards.append(reward)
+        episode_queries.append(queries)
 
     # scenario stats
-    print(episode_rewards)
-    mean = np.mean(episode_rewards)
-    stddev = np.std(episode_rewards)
-    median = np.median(episode_rewards)
-    print(f"mean: {mean}, stddev: {stddev:.3f}, median: {median}")
+    print('\n=== Simulation Statistics ===')
+
+    reward_mean = np.mean(episode_rewards)
+    reward_stddev = np.std(episode_rewards)
+    reward_median = np.median(episode_rewards)
+    print(f"Rounds:  mean = {reward_mean}, stddev = {reward_stddev:.3f}, median = {reward_median}")
+
+    queries_mean = np.mean(episode_queries)
+    queries_stddev = np.std(episode_queries)
+    queries_median = np.median(episode_queries)
+    print(f"Queries: mean = {queries_mean}, stddev = {queries_stddev:.3f}, median = {queries_median}")
 
 
 def main():

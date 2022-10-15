@@ -1,6 +1,5 @@
 {
     "attacker": {
-        "probabilities": [0.5, 0.5],
         "attacks": [
             {
                 "type": "evasion",
@@ -12,17 +11,6 @@
                     "num_random_init": 0,
                     "max_iter": 1,
                     "targeted": false,
-                    "batch_size": 1,
-                    "verbose": false
-                }
-            },
-            {
-                "type": "evasion",
-                "name": "SquareAttack",
-                "params": {
-                    "norm": "inf",
-                    "eps": 0.03137254901,
-                    "max_iter": 1,
                     "batch_size": 1,
                     "verbose": false
                 }

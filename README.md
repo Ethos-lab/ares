@@ -2,6 +2,8 @@
 
 Ares is a system-oriented wargame framework for adversarial ML used to simulate interactions between an attacker and defender in a real-time battle.
 
+The paper for this framework was presented in the `5th Deep Learning and Security Workshop (DLS 2022)` at the `43rd IEEE Symposium on Security and Privacy Workshops (SPW 2022)`. The link to the paper can be found [here](https://ieeexplore.ieee.org/abstract/document/9833895).
+
 ## Requirements
 
 Ares uses the following dependencies:
@@ -27,13 +29,13 @@ source venv/bin/activate
 Install all the package dependencies with your choice of frameworks. For example, to use PyTorch and ART use the following.
 
 ```bash
-pip install -e .[pytorch, art]
+pip install -e ".[pytorch,art]"
 ```
 
 Ares supports the following frameworks:
 
 - PyTorch
-- IBM Adversarial Robustness Toolkit
+- Adversarial Robustness Toolkit
 
 ## Config File
 
@@ -55,13 +57,17 @@ Each component must be instantiated to create the reinforcement learning environ
 
 ## Usage
 
+There are multiple ways to run the framework depending on the use-case. The demo file located in `notebooks/demo.ipynb` provides more a comprehensive guide on running simulations.
+
 ### Basic
 
 To run a basic simulation, simply use the command line interface.
 
 ```bash
-ares /path/to/config.json
+python -m ares /path/to/config.json
 ```
+
+This will output most of the useful information needed for each round and the final simulation statistics at the end.
 
 ### Intermediate
 
@@ -99,7 +105,7 @@ for episode in range(env.scenario.num_episodes):
         winner = observation['winner']
         step_count = info['step_count']
 
-        print(f'Step {step_count:2}: ({y[0]} | {y_pred[0]})')
+        print(f'Round {step_count}: ({y[0]} | {y_pred[0]})')
 
     print(f'Game end: {winner} wins after {reward} rounds')
     episode_rewards.append(reward)
@@ -111,6 +117,8 @@ median = np.median(episode_rewards)
 print(f'mean: {mean}, stddev: {stddev:.3f}, median: {median}')
 ```
 
+This allows more choice on which results to track and the type of statistics to calculate.
+
 ### Advanced
 
 Each of the components can also be constructed manually rather than using the helper functions. This does not require a config file and gives more freedom into their instantiation.
@@ -121,9 +129,10 @@ If you use this code in your work please cite the following paper:
 
 ```bibtex
 @inproceedings{ahmed2022ares,
-      title={Ares: A System-Oriented Wargame Framework for Adversarial ML},
-      author={Farhan Ahmed and Pratik Vaishnavi and Kevin Ekyholt and Amir Rahmati},
-      booktitle={IEEE Security and Privacy Workshops (SPW)},
-      year={2022},
+    title={Ares: A System-Oriented Wargame Framework for Adversarial ML},
+    author={Farhan Ahmed and Pratik Vaishnavi and Kevin Ekyholt and Amir Rahmati},
+    booktitle={IEEE Security and Privacy Workshops (SPW)},
+    year={2022},
+    doi={10.1109/SPW54247.2022.9833895}
 }
 ```

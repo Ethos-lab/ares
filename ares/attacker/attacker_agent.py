@@ -22,6 +22,9 @@ class AttackerAgent:
     def update_policy(self, observation: dict):
         pass
 
+    def current_attack(self) -> str:
+        return self.active_attack.name
+
     def evade(self) -> bool:
         if self.evasion_probability is not None:
             p = np.random.rand()
