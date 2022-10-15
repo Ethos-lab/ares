@@ -2,7 +2,7 @@
 
 Ares is a system-oriented wargame framework for adversarial ML used to simulate interactions between an attacker and defender in a real-time battle.
 
-The paper for this framework was presented in the `5th Deep Learning and Security Workshop (DLS 2022)` at the `2022 IEEE Symposium on Security and Privacy Workshops (SPW)`. The link to the paper can be found [here](https://ieeexplore.ieee.org/abstract/document/9833895).
+The paper for this framework was presented in the `5th Deep Learning and Security Workshop (DLS 2022)` at the `43rd IEEE Symposium on Security and Privacy Workshops (SPW 2022)`. The link to the paper can be found [here](https://ieeexplore.ieee.org/abstract/document/9833895).
 
 ## Requirements
 
@@ -57,14 +57,14 @@ Each component must be instantiated to create the reinforcement learning environ
 
 ## Usage
 
-There are multiple ways to run `ares` depending on the use-case. The demo file located in `notebooks/demo.ipynb` provides more comprehensive guide on running the simulations.
+There are multiple ways to run the framework depending on the use-case. The demo file located in `notebooks/demo.ipynb` provides more a comprehensive guide on running simulations.
 
 ### Basic
 
 To run a basic simulation, simply use the command line interface.
 
 ```bash
-ares /path/to/config.json
+python -m ares /path/to/config.json
 ```
 
 This will output most of the useful information needed for each round and the final simulation statistics at the end.
