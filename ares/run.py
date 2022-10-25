@@ -60,7 +60,7 @@ def run_simulation(args):
         episode_queries.append(queries)
 
     # scenario stats
-    print('\n=== Simulation Statistics ===')
+    print("\n=== Simulation Statistics ===")
 
     reward_mean = np.mean(episode_rewards)
     reward_stddev = np.std(episode_rewards)

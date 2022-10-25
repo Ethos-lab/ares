@@ -2,7 +2,7 @@
 
 Ares is a system-oriented wargame framework for adversarial ML used to simulate interactions between an attacker and defender in a real-time battle.
 
-The paper for this framework was presented in the `5th Deep Learning and Security Workshop (DLS 2022)` at the `43rd IEEE Symposium on Security and Privacy Workshops (SPW 2022)`. The link to the paper can be found [here](https://ieeexplore.ieee.org/abstract/document/9833895).
+The paper for this framework was presented in the `5th Deep Learning and Security Workshop (DLS 2022)` at the `43rd IEEE Symposium on Security and Privacy Workshops (SPW 2022)`. The link to the paper can be found [here](https://arxiv.org/abs/2210.12952v1).
 
 ## Requirements
 
@@ -26,16 +26,16 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-Install all the package dependencies with your choice of frameworks. For example, to use PyTorch and ART use the following.
+Install all the package dependencies with the machine learning framework of your choice. For example, to use PyTorch use the following.
 
 ```bash
-pip install -e ".[pytorch,art]"
+pip install -e ".[pytorch]"
 ```
 
-Ares supports the following frameworks:
+Ares supports the following machine learning frameworks:
 
 - PyTorch
-- Adversarial Robustness Toolkit
+- TensorFlow (in-progress)
 
 ## Config File
 
