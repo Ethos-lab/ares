@@ -14,8 +14,10 @@ class EvaluationScenario:
         self.random_noise = dataset.get("random_noise", False)
 
         name = dataset["name"]
-        dataroot = dataset["dataroot"]
-        self.dataset = Dataset(name, dataroot)
+        dataroot = dataset.get("dataroot", None)
+        train_set = dataset.get("train_set", False)
+        channels_first = dataset.get("channels_first", True)
+        self.dataset = Dataset(name, dataroot, train_set, channels_first)
 
     def get_valid_sample(self, classifiers: List[Classifier]) -> Tuple[np.ndarray, np.ndarray]:
         all_correct = False
