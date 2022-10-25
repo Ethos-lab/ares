@@ -2,7 +2,7 @@
 
 Ares is a system-oriented wargame framework for adversarial ML used to simulate interactions between an attacker and defender in a real-time battle.
 
-The paper for this framework was presented in the `5th Deep Learning and Security Workshop (DLS 2022)` at the `43rd IEEE Symposium on Security and Privacy Workshops (SPW 2022)`. The link to the paper can be found [here](https://arxiv.org/abs/2210.12952v1).
+The paper for this framework was presented in the `5th Deep Learning and Security Workshop (DLS 2022)` at the `43rd IEEE Symposium on Security and Privacy Workshops (SPW 2022)`. The link to the paper can be found [here](https://arxiv.org/abs/2210.12952).
 
 ## Requirements
 
