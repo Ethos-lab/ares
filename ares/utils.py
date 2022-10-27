@@ -47,7 +47,7 @@ def get_defender_agent(config: dict) -> DefenderAgent:
         model_file = model_config["file"]
         model_name = model_config["name"]
         model_params = model_config.get("params", {})
-        model_checkpoint = model_config["checkpoint"]
+        model_checkpoint = model_config.get("checkpoint", None)
         classifier = Classifier(
             file=model_file,
             name=model_name,
