@@ -47,10 +47,10 @@ class Attack:
 
     def get_evasion_attack(self, classifier: Classifier) -> EvasionAttack:
         ctor = getattr(art.attacks.evasion, self.name)
-        attack = ctor(classifier, **self.params)
+        attack = ctor(classifier.classifier, **self.params)
         return attack
 
     def get_poisoning_attack(self, classifier: Classifier) -> PoisoningAttack:
         ctor = getattr(art.attacks.poisoning, self.name)
-        attack = ctor(classifier, **self.params)
+        attack = ctor(classifier.classifier, **self.params)
         return attack

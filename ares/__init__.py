@@ -1,6 +1,6 @@
 import logging
 
-from gym.envs.registration import register
+from gymnasium.envs.registration import register
 
 from . import attacker, defender, environment, scenario
 from .run import main

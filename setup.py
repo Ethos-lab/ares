@@ -6,7 +6,7 @@ with open("README.md", "r") as f:
 install_requires = [
     "numpy",
     "adversarial-robustness-toolbox",
-    "gym",
+    "gymnasium",
 ]
 dev_requires = ["pytest", "tox"]
 torch_requires = ["torch", "torchvision"]

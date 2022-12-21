@@ -44,11 +44,13 @@ def get_defender_agent(config: dict) -> DefenderAgent:
     classifiers = []
 
     for model_config in defender_models:
+        model_framework = model_config["framework"].lower()
         model_file = model_config["file"]
         model_name = model_config["name"]
         model_params = model_config.get("params", {})
         model_checkpoint = model_config.get("checkpoint", None)
         classifier = Classifier(
+            framework=model_framework,
             file=model_file,
             name=model_name,
             params=model_params,

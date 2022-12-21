@@ -1,10 +1,10 @@
 from typing import List, Optional, Tuple
 
-from gym import spaces
+from gymnasium import spaces
 import numpy as np
 
-from ares.attacker.attack import Attack
-from ares.defender.classifiers import Classifier
+from ares.attacker import Attack
+from ares.defender import Classifier
 
 
 class AttackerAgent:
