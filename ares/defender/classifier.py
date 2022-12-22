@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Optional, Union
 
 import numpy as np
 
-from .models import load_pytorch_model, load_tensorflow_model
+from ares.defender.models import load_pytorch_model, load_tensorflow_model
 
 if TYPE_CHECKING:
     from art.estimators.classification import PyTorchClassifier, TensorFlowV2Classifier
@@ -44,7 +44,7 @@ class Classifier:
                 clip_values=clip_values,
             )
         else:
-            raise ValueError(f'Error loading classifier: {framework} framework not supported')
+            raise ValueError(f"Error loading classifier: {framework} framework not supported")
 
     def reset(self):
         self._model.reset()

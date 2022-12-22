@@ -30,7 +30,7 @@ def load_pytorch_model(file: str, name: str, params: dict, checkpoint: Optional[
     else:
         raise ImportError(f"Error loading classifier: cannot load {name} from {file}")
 
-    # load model weights checkpoint if provided
+    # load model weights if provided
     if checkpoint is not None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         state_dict = torch.load(checkpoint, map_location=device)
@@ -58,8 +58,8 @@ def load_tensorflow_model(file: str, name: str, params: dict, checkpoint: Option
 
     # if checkpoint is a directory, load the entire model
     if checkpoint and os.path.isdir(checkpoint):
-        model = tf.keras.models.load_model(checkpoint)
-        wrapper = TensorFlowModelWrapper(model)
+        full_model = tf.keras.models.load_model(checkpoint)
+        wrapper = TensorFlowModelWrapper(full_model)
         return wrapper
 
     # load tensorflow model from file
@@ -72,9 +72,9 @@ def load_tensorflow_model(file: str, name: str, params: dict, checkpoint: Option
     else:
         raise ImportError(f"Error loading classifier: cannot load {name} from {file}")
 
-    # load model weights checkpoint if provided
+    # load model weights if provided
     if checkpoint is not None:
         model.load_weights(checkpoint)
 
     wrapper = TensorFlowModelWrapper(model)
-    return model
+    return wrapper

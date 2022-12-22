@@ -1,11 +1,11 @@
-from typing import List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Optional
 
 from gymnasium import spaces
 import numpy as np
 
 if TYPE_CHECKING:
-    from ares.defender import Classifier
-    from ares.defender import Detector
+    from ares.defender import Classifier, Detector
+
 
 class DefenderAgent:
     def __init__(self, classifiers: List["Classifier"], probabilities: List[float], detector: Optional["Detector"]):
