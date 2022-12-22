@@ -35,7 +35,7 @@ pip install -e ".[pytorch]"
 Ares supports the following machine learning frameworks:
 
 - PyTorch
-- TensorFlow (in-progress)
+- TensorFlow
 
 ## Config File
 

@@ -1,7 +1,7 @@
 from typing import List, Tuple
 
-import gym
-from gym import spaces
+import gymnasium as gym
+from gymnasium import spaces
 import numpy as np
 
 from ares.attacker import AttackerAgent
@@ -52,7 +52,7 @@ class AresEnvironment(gym.Env):
         # attacker turn
         self.attacker.update_policy({})
         x_adv, eps, evaded = self.attacker.attack(classifier, x, y)
-        queries = classifier.queries()
+        queries = classifier.queries
         self.queries += queries
 
         # run detector if not evading

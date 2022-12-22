@@ -1,10 +1,10 @@
 from typing import List, Optional, Tuple
 
-from art.estimators.classification import PyTorchClassifier
-from gym import spaces
+from gymnasium import spaces
 import numpy as np
 
-from ares.attacker.attack import Attack
+from ares.attacker import Attack
+from ares.defender import Classifier
 
 
 class AttackerAgent:
@@ -31,7 +31,7 @@ class AttackerAgent:
             return p < self.evasion_probability
         return False
 
-    def attack(self, classifier: PyTorchClassifier, x: np.ndarray, y: np.ndarray) -> Tuple[np.ndarray, float, bool]:
+    def attack(self, classifier: Classifier, x: np.ndarray, y: np.ndarray) -> Tuple[np.ndarray, float, bool]:
         evade_turn = self.evade()
         if evade_turn:
             return x, 0, True

@@ -1,14 +1,14 @@
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
-from gym import spaces
+from gymnasium import spaces
 import numpy as np
 
-from ares.defender.classifiers import Classifier
-from ares.defender.detector import Detector
+if TYPE_CHECKING:
+    from ares.defender import Classifier, Detector
 
 
 class DefenderAgent:
-    def __init__(self, classifiers: List[Classifier], probabilities: List[float], detector: Optional[Detector]):
+    def __init__(self, classifiers: List["Classifier"], probabilities: List[float], detector: Optional["Detector"]):
         self.classifiers = classifiers
         self.probabilities = probabilities
         self.num_classifiers = len(classifiers)
@@ -24,7 +24,7 @@ class DefenderAgent:
     def current_defense(self) -> str:
         return self.active_classifier.name
 
-    def defend(self) -> Classifier:
+    def defend(self) -> "Classifier":
         self.index = np.random.choice(len(self.classifiers), p=self.probabilities)
         self.active_classifier = self.classifiers[self.index]
         self.active_classifier.reset()

@@ -25,6 +25,7 @@
         "probabilities": [0.3, 0.7],
         "models": [
             {
+                "framework": "pytorch",
                 "file": "./data/models/resnet.py",
                 "name": "resnet18_nat",
                 "params": {
@@ -33,6 +34,7 @@
                 "checkpoint": "./data/state_dicts/resnet18_nat.pth"
             },
             {
+                "framework": "pytorch",
                 "file": "./data/models/resnet.py",
                 "name": "resnet18_adv",
                 "params": {

@@ -2,7 +2,6 @@ from typing import Optional, Tuple
 
 import art
 from art.attacks.attack import EvasionAttack, PoisoningAttack
-from art.estimators.classification import PyTorchClassifier
 import numpy as np
 
 from ares.defender import Classifier
@@ -26,7 +25,7 @@ class Attack:
     def generate(self, classifier: Classifier, x: np.ndarray, y: np.ndarray) -> Tuple[np.ndarray, float]:
         # only supports evasion attacks for now
         if self.type == "evasion":
-            attack = self.get_evasion_attack(classifier.classifier)
+            attack = self.get_evasion_attack(classifier)
             x_adv = attack.generate(x=x, y=y)
         else:
             raise ValueError(f"Error loading attack: {self.type} attacks not supported")
@@ -46,12 +45,12 @@ class Attack:
 
         return x_adv, eps
 
-    def get_evasion_attack(self, classifier: PyTorchClassifier) -> EvasionAttack:
+    def get_evasion_attack(self, classifier: Classifier) -> EvasionAttack:
         ctor = getattr(art.attacks.evasion, self.name)
-        attack = ctor(classifier, **self.params)
+        attack = ctor(classifier.classifier, **self.params)
         return attack
 
-    def get_poisoning_attack(self, classifier: PyTorchClassifier) -> PoisoningAttack:
+    def get_poisoning_attack(self, classifier: Classifier) -> PoisoningAttack:
         ctor = getattr(art.attacks.poisoning, self.name)
-        attack = ctor(classifier, **self.params)
+        attack = ctor(classifier.classifier, **self.params)
         return attack
