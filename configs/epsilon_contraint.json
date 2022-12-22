@@ -18,6 +18,23 @@
                     "norm": "inf",
                     "eps": 0.03137254901
                 }
+            },
+            {
+                "type": "evasion",
+                "name": "HopSkipJump",
+                "params": {
+                    "norm": "inf",
+                    "max_iter": 0,
+                    "max_eval": 1,
+                    "init_eval": 1,
+                    "targeted": false,
+                    "batch_size": 1,
+                    "verbose": false
+                },
+                "epsilon_constraint": {
+                    "norm": "inf",
+                    "eps": 0.03137254901
+                }
             }
         ]
     },

@@ -1,4 +1,4 @@
-name: CI Style Checks
+name: CI Unit Tests
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   style:
-    name: Style Checks
+    name: Unit Tests
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -28,7 +28,5 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install tox
-    - name: Run lint check
-      run: tox -e lint
-    - name: Run type check
-      run: tox -e type
+    - name: Run unit tests
+      run: tox -e test
