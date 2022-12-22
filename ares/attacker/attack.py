@@ -1,7 +1,8 @@
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 import art
 from art.attacks.attack import EvasionAttack, PoisoningAttack
+from art.utils import projection
 import numpy as np
 
 from ares.defender import Classifier
@@ -30,18 +31,15 @@ class Attack:
         else:
             raise ValueError(f"Error loading attack: {self.type} attacks not supported")
 
-        if self.norm == "inf":
-            eps = np.linalg.norm(np.abs(x_adv - x).ravel(), ord=np.inf)
-        elif self.norm in (1, "1", "l1"):
-            eps = np.linalg.norm(np.abs(x_adv - x).ravel(), ord=1)
-        elif self.norm in (2, "2", "l2"):
-            eps = np.linalg.norm(np.abs(x_adv - x).ravel(), ord=2)
-        else:
-            raise ValueError(f"Error generating attack: {self.norm} norm not supported")
+        # calculate perturbation
+        perturbation = x_adv - x
+        eps = self.calculate_epsilon(perturbation, self.norm)
 
-        # Enforce epsilon constraint
+        # enforce epsilon constraint
         if self.epsilon_constraint and eps > self.eps:
-            raise ValueError("Error generating attack: epsilon constraint violated")
+            perturbation = projection(perturbation, self.eps, self.norm)
+            x_adv = x + perturbation
+            eps = self.calculate_epsilon(perturbation, self.norm)
 
         return x_adv, eps
 
@@ -54,3 +52,16 @@ class Attack:
         ctor = getattr(art.attacks.poisoning, self.name)
         attack = ctor(classifier.classifier, **self.params)
         return attack
+
+    @staticmethod
+    def calculate_epsilon(perturbation: np.ndarray, norm: Union[int, float, str]) -> float:
+        if norm in (np.inf, "inf", "Inf", "INF"):
+            eps = np.linalg.norm(np.abs(perturbation).ravel(), ord=np.inf)
+        elif norm in (1, "1", "l1", "L1"):
+            eps = np.linalg.norm(np.abs(perturbation).ravel(), ord=1)
+        elif norm in (2, "2", "l2", "L2"):
+            eps = np.linalg.norm(np.abs(perturbation).ravel(), ord=2)
+        else:
+            raise ValueError(f"Error generating attack: {norm} norm not supported")
+
+        return eps
