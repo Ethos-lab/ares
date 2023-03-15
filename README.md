@@ -130,7 +130,7 @@ If you use this code in your work please cite the following paper:
 ```bibtex
 @inproceedings{ahmed2022ares,
     title={Ares: A System-Oriented Wargame Framework for Adversarial ML},
-    author={Farhan Ahmed and Pratik Vaishnavi and Kevin Ekyholt and Amir Rahmati},
+    author={Farhan Ahmed and Pratik Vaishnavi and Kevin Eykholt and Amir Rahmati},
     booktitle={IEEE Security and Privacy Workshops (SPW)},
     year={2022},
     doi={10.1109/SPW54247.2022.9833895}
