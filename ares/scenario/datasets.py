@@ -1,8 +1,8 @@
 from typing import Optional, Tuple
 
+import numpy as np
 from art.config import set_data_path
 from art.utils import load_dataset
-import numpy as np
 
 
 class Dataset:
@@ -30,8 +30,15 @@ class Dataset:
         self.y = np.argmax(self.y, axis=1)
         self.size = len(self.x)
 
+        self.permutation = np.random.permutation(self.size)
+        self.index = 0
+
     def sample(self) -> Tuple[np.ndarray, np.ndarray]:
-        index = np.random.choice(self.size, 1)
-        x = self.x[index]
-        y = self.y[index]
+        index = self.permutation[self.index]
+        self.index += 1
+        if self.index >= self.size:
+            self.index = 0
+
+        x = self.x[[index]]
+        y = self.y[[index]]
         return x, y

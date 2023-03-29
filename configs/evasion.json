@@ -13,7 +13,7 @@
                 }
             }
         ],
-        "evasion_probability": 0.25
+        "evasion_probability": 0.75
     },
     "defender": {
         "probabilities": [0.3, 0.7],
@@ -36,14 +36,7 @@
                 },
                 "checkpoint": "./data/state_dicts/resnet18_adv.pth"
             }
-        ],
-        "detector": {
-            "file": "./data/detectors/blackbox_detector.py",
-            "name": "blackbox_detector",
-            "function": "detect",
-            "params": {},
-            "probability": 0.75
-        }
+        ]
     },
     "scenario": {
         "threat_model": "blackbox",

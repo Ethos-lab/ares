@@ -1,9 +1,9 @@
 from typing import Optional, Tuple, Union
 
 import art
+import numpy as np
 from art.attacks.attack import EvasionAttack, PoisoningAttack
 from art.utils import projection
-import numpy as np
 
 from ares.defender import Classifier
 

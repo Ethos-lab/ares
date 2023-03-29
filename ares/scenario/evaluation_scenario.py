@@ -19,6 +19,15 @@ class EvaluationScenario:
         channels_first = dataset.get("channels_first", True)
         self.dataset = Dataset(name, dataroot, train_set, channels_first)
 
+    def get_sample(self) -> Tuple[np.ndarray, np.ndarray]:
+        x, y = self.dataset.sample()
+
+        if self.random_noise:
+            noise = np.random.uniform(-8 / 255, 8 / 255, x.shape).astype(np.float32)
+            x = x + noise
+
+        return x, y
+
     def get_valid_sample(self, classifiers: List[Classifier]) -> Tuple[np.ndarray, np.ndarray]:
         all_correct = False
         while not all_correct:
