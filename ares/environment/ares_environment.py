@@ -63,13 +63,13 @@ class AresEnvironment(gym.Env):
         else:
             detected = self.defender.detect(x_adv)
 
-        # check winner
         winner = None
         y_pred = classifier.predict(x_adv)
 
+        # check end conditions
         if detected:
             self.done = True
-            winner = "defender"
+            winner = "attacker" if evaded else "defender"
         elif not evaded and y_pred != y:
             self.done = True
             winner = "attacker"

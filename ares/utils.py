@@ -87,12 +87,11 @@ def get_defender_agent(config: dict) -> DefenderAgent:
 
 
 def get_evaluation_scenario(config: dict) -> EvaluationScenario:
-    threat_model = config["scenario"]["threat_model"]
     num_episodes = config["scenario"]["num_episodes"]
     max_rounds = config["scenario"]["max_rounds"]
     dataset = config["scenario"]["dataset"]
 
-    execution_scenario = EvaluationScenario(threat_model, num_episodes, max_rounds, dataset)
+    execution_scenario = EvaluationScenario(num_episodes, max_rounds, dataset)
     return execution_scenario
 
 

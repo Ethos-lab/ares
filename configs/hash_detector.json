@@ -38,15 +38,14 @@
             }
         ],
         "detector": {
-            "file": "./data/detectors/blackbox_detector.py",
-            "name": "blackbox_detector",
+            "file": "./data/detectors/hash_detector.py",
+            "name": "hash_detector",
             "function": "detect",
             "params": {},
             "probability": 0.75
         }
     },
     "scenario": {
-        "threat_model": "blackbox",
         "num_episodes": 50,
         "max_rounds": 50,
         "dataset": {
@@ -54,7 +53,7 @@
             "input_shape": [3, 32, 32],
             "num_classes": 10,
             "clip_values": [0, 1],
-            "random_noise": true,
+            "random_noise": 0.03,
             "dataroot": "./data/cifar10"
         }
     }

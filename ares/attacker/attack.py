@@ -35,8 +35,15 @@ class Attack:
         perturbation = x_adv - x
         eps = self.calculate_epsilon(perturbation, self.norm)
 
+        # if no perturbation, add random noise
+        if eps == 0:
+            noise = np.random.uniform(-self.eps, self.eps, x.shape).astype(np.float32)
+            x_adv = x + noise
+            eps = self.calculate_epsilon(noise, self.norm)
+
         # enforce epsilon constraint
         if self.epsilon_constraint and eps > self.eps:
+            print("EPSILON CONSTRAINT")
             perturbation = projection(perturbation, self.eps, self.norm)
             x_adv = x + perturbation
             eps = self.calculate_epsilon(perturbation, self.norm)

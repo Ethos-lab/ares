@@ -53,14 +53,17 @@ def run_simulation(args):
             step_count = info["step_count"]
             queries = info["queries"]
 
-            print(f"Round {step_count:2}: defense = {defense}, attack = {attack}")
-            print(f"\t [label = {y[0]} | pred = {y_pred[0]}], eps = {eps:.6f}, queries = {queries}")
+            print(f"Round {step_count}: defense = {defense}, attack = {attack}")
+            print(f"    [label = {y[0]} | pred = {y_pred[0]}], eps = {eps:.6f}, queries = {queries}")
             if evaded:
-                print("\t attacker evaded")
+                print("    ATTACKER: evaded")
             elif detected:
-                print("\t attacker was detected")
+                if evaded:
+                    print("    DEFENDER: incorrect detection")
+                else:
+                    print("    DEFENDER: correct detection")
 
-        print(f"Game end: {winner} wins after {reward} rounds and {queries} queries")
+        print(f"GAME END: {winner} wins after {reward} rounds and {queries} queries")
         episode_rewards.append(reward)
         episode_queries.append(queries)
         if winner == "attacker":

@@ -7,11 +7,11 @@ from ares.scenario.datasets import Dataset
 
 
 class EvaluationScenario:
-    def __init__(self, threat_model: str, num_episodes: int, max_rounds: int, dataset: dict):
-        self.threat_model = threat_model
+    def __init__(self, num_episodes: int, max_rounds: int, dataset: dict):
         self.num_episodes = num_episodes
         self.max_rounds = max_rounds
-        self.random_noise = dataset.get("random_noise", False)
+        self.epsilon = dataset.get("random_noise", 0)
+        self.random_noise = self.epsilon > 0
 
         name = dataset["name"]
         dataroot = dataset.get("dataroot", None)
@@ -23,7 +23,7 @@ class EvaluationScenario:
         x, y = self.dataset.sample()
 
         if self.random_noise:
-            noise = np.random.uniform(-8 / 255, 8 / 255, x.shape).astype(np.float32)
+            noise = np.random.uniform(-self.epsilon, self.epsilon, x.shape).astype(np.float32)
             x = x + noise
 
         return x, y
@@ -39,7 +39,7 @@ class EvaluationScenario:
                     all_correct = False
 
         if self.random_noise:
-            noise = np.random.uniform(-8 / 255, 8 / 255, x.shape).astype(np.float32)
+            noise = np.random.uniform(-self.epsilon, self.epsilon, x.shape).astype(np.float32)
             x = x + noise
 
         return x, y

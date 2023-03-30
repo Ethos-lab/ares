@@ -38,7 +38,6 @@
         ]
     },
     "scenario": {
-        "threat_model": "blackbox",
         "num_episodes": 50,
         "max_rounds": 50,
         "dataset": {
@@ -46,7 +45,7 @@
             "input_shape": [3, 32, 32],
             "num_classes": 10,
             "clip_values": [0, 1],
-            "random_noise": true,
+            "random_noise": 0.03,
             "dataroot": "./data/cifar10"
         }
     }
