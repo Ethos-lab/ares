@@ -57,7 +57,7 @@ def run_simulation(args):
             print(f"    [label = {y[0]} | pred = {y_pred[0]}], eps = {eps:.6f}, queries = {queries}")
             if evaded:
                 print("    ATTACKER: evaded")
-            elif detected:
+            if detected:
                 if evaded:
                     print("    DEFENDER: incorrect detection")
                 else:

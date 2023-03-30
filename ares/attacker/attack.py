@@ -43,7 +43,6 @@ class Attack:
 
         # enforce epsilon constraint
         if self.epsilon_constraint and eps > self.eps:
-            print("EPSILON CONSTRAINT")
             perturbation = projection(perturbation, self.eps, self.norm)
             x_adv = x + perturbation
             eps = self.calculate_epsilon(perturbation, self.norm)
