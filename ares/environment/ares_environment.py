@@ -1,8 +1,8 @@
 from typing import List, Tuple
 
 import gymnasium as gym
-from gymnasium import spaces
 import numpy as np
+from gymnasium import spaces
 
 from ares.attacker import AttackerAgent
 from ares.defender import DefenderAgent
@@ -55,20 +55,22 @@ class AresEnvironment(gym.Env):
         queries = classifier.queries
         self.queries += queries
 
-        # run detector if not evading
+        # run detector
         if evaded:
-            detected = False
+            x_sample, _ = self.scenario.get_sample()
+            detected = self.defender.detect(x_sample)
             x_adv = x
         else:
             detected = self.defender.detect(x_adv)
 
-        # check winner
         winner = None
         y_pred = classifier.predict(x_adv)
+
+        # check end conditions
         if detected:
             self.done = True
-            winner = "defender"
-        elif y_pred != y:
+            winner = "attacker" if evaded else "defender"
+        elif not evaded and y_pred != y:
             self.done = True
             winner = "attacker"
         elif self.step_count >= self.scenario.max_rounds:

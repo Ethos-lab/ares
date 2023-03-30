@@ -1,21 +1,6 @@
 {
     "attacker": {
-        "probabilities": [0.5, 0.5],
         "attacks": [
-            {
-                "type": "evasion",
-                "name": "ProjectedGradientDescent",
-                "params": {
-                    "norm": "inf",
-                    "eps": 0.03137254901,
-                    "eps_step": 0.00784313725,
-                    "num_random_init": 0,
-                    "max_iter": 1,
-                    "targeted": false,
-                    "batch_size": 1,
-                    "verbose": false
-                }
-            },
             {
                 "type": "evasion",
                 "name": "SquareAttack",
@@ -27,7 +12,8 @@
                     "verbose": false
                 }
             }
-        ]
+        ],
+        "evasion_probability": 0.25
     },
     "defender": {
         "probabilities": [0.3, 0.7],
@@ -50,7 +36,18 @@
                 },
                 "checkpoint": "./data/state_dicts/resnet18_adv.pth"
             }
-        ]
+        ],
+        "detector": {
+            "file": "./data/detectors/lp_norm_detector.py",
+            "name": "lp_norm_detector",
+            "function": "detect",
+            "params": {
+                "norm": "inf",
+                "epsilon": 0.032,
+                "memory_size": 10
+            },
+            "probability": 0.75
+        }
     },
     "scenario": {
         "num_episodes": 50,

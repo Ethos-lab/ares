@@ -20,8 +20,8 @@ class Classifier:
         clip_values = dataset_params.get("clip_values", (0, 1))
 
         if framework == "pytorch":
-            from art.estimators.classification import PyTorchClassifier
             import torch
+            from art.estimators.classification import PyTorchClassifier
 
             self._model = load_pytorch_model(file, name, params, checkpoint)
             self._classifier = PyTorchClassifier(
@@ -32,8 +32,8 @@ class Classifier:
                 clip_values=clip_values,
             )
         elif framework == "tensorflow":
-            from art.estimators.classification import TensorFlowV2Classifier
             import tensorflow as tf
+            from art.estimators.classification import TensorFlowV2Classifier
 
             self._model = load_tensorflow_model(file, name, params, checkpoint)
             self._classifier = TensorFlowV2Classifier(

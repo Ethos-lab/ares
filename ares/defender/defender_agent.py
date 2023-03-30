@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, List, Optional
 
-from gymnasium import spaces
 import numpy as np
+from gymnasium import spaces
 
 if TYPE_CHECKING:
     from ares.defender import Classifier, Detector

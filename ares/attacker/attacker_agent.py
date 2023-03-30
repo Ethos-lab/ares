@@ -1,7 +1,7 @@
 from typing import List, Optional, Tuple
 
-from gymnasium import spaces
 import numpy as np
+from gymnasium import spaces
 
 from ares.attacker import Attack
 from ares.defender import Classifier

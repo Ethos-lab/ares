@@ -1,21 +1,6 @@
 {
     "attacker": {
-        "probabilities": [0.5, 0.5],
         "attacks": [
-            {
-                "type": "evasion",
-                "name": "ProjectedGradientDescent",
-                "params": {
-                    "norm": "inf",
-                    "eps": 0.03137254901,
-                    "eps_step": 0.00784313725,
-                    "num_random_init": 0,
-                    "max_iter": 1,
-                    "targeted": false,
-                    "batch_size": 1,
-                    "verbose": false
-                }
-            },
             {
                 "type": "evasion",
                 "name": "SquareAttack",
@@ -27,7 +12,8 @@
                     "verbose": false
                 }
             }
-        ]
+        ],
+        "evasion_probability": 0.75
     },
     "defender": {
         "probabilities": [0.3, 0.7],
