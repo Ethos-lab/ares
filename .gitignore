@@ -154,5 +154,3 @@ cython_debug/
 # Other
 *.DS_Store
 data/
-models/
-state_dicts/
