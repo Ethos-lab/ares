@@ -84,14 +84,24 @@ def print_statistics(title, episode_rewards, episode_queries):
     total = len(episode_rewards)
     print(f"Total: {total}")
     if total > 0:
+        reward_min = np.amin(episode_rewards)
+        reward_max = np.amax(episode_rewards)
         reward_mean = np.mean(episode_rewards)
         reward_stddev = np.std(episode_rewards)
         reward_median = np.median(episode_rewards)
-        print(f"Rounds:  mean = {reward_mean:.3f}, stddev = {reward_stddev:.3f}, median = {reward_median}")
+        print(
+            f"Rounds: min = {reward_min}, max = {reward_max}, mean = {reward_mean:.3f}, "
+            f"stddev = {reward_stddev:.3f}, median = {reward_median}"
+        )
+        queries_min = np.amin(episode_queries)
+        queries_max = np.amax(episode_queries)
         queries_mean = np.mean(episode_queries)
         queries_stddev = np.std(episode_queries)
         queries_median = np.median(episode_queries)
-        print(f"Queries: mean = {queries_mean:.3f}, stddev = {queries_stddev:.3f}, median = {queries_median}")
+        print(
+            f"Queries: min = {queries_min}, max = {queries_max}, mean = {queries_mean:.3f}, "
+            f"stddev = {queries_stddev:.3f}, median = {queries_median}"
+        )
 
 
 def main():
