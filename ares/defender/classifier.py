@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class Classifier:
     def __init__(
-        self, framework: str, file: str, name: str, params: dict, checkpoint: Optional[str], dataset_params: dict
+        self, framework: str, file: str, name: str, params: dict, dataset_params: dict, checkpoint: Optional[str] = None
     ):
         self.framework = framework
         self.name = name

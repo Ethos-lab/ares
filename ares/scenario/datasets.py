@@ -6,7 +6,7 @@ from art.utils import load_dataset
 
 
 class Dataset:
-    def __init__(self, name: str, dataroot: Optional[str], train_set: bool = False, channels_first: bool = True):
+    def __init__(self, name: str, dataroot: Optional[str] = None, train_set: bool = False, channels_first: bool = True):
         self.name = name
         self.dataroot = dataroot
         self.train_set = train_set

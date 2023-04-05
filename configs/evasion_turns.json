@@ -1,0 +1,53 @@
+{
+    "attacker": {
+        "attacks": [
+            {
+                "type": "evasion",
+                "name": "SquareAttack",
+                "params": {
+                    "norm": "inf",
+                    "eps": 0.03137254901,
+                    "max_iter": 1,
+                    "batch_size": 1,
+                    "verbose": false
+                }
+            }
+        ],
+        "evasion_turns": 3
+    },
+    "defender": {
+        "probabilities": [0.3, 0.7],
+        "models": [
+            {
+                "framework": "pytorch",
+                "file": "./data/models/resnet.py",
+                "name": "resnet18_nat",
+                "params": {
+                    "num_classes": 10
+                },
+                "checkpoint": "./data/state_dicts/resnet18_nat.pth"
+            },
+            {
+                "framework": "pytorch",
+                "file": "./data/models/resnet.py",
+                "name": "resnet18_adv",
+                "params": {
+                    "num_classes": 10
+                },
+                "checkpoint": "./data/state_dicts/resnet18_adv.pth"
+            }
+        ]
+    },
+    "scenario": {
+        "num_episodes": 50,
+        "max_rounds": 50,
+        "dataset": {
+            "name": "cifar10",
+            "input_shape": [3, 32, 32],
+            "num_classes": 10,
+            "clip_values": [0, 1],
+            "random_noise": 0.03,
+            "dataroot": "./data/cifar10"
+        }
+    }
+}

@@ -4,7 +4,7 @@ import os
 from typing import Optional
 
 
-def load_pytorch_model(file: str, name: str, params: dict, checkpoint: Optional[str]):
+def load_pytorch_model(file: str, name: str, params: dict, checkpoint: Optional[str] = None):
     import torch
 
     class PyTorchModelWrapper(torch.nn.Module):
@@ -40,7 +40,7 @@ def load_pytorch_model(file: str, name: str, params: dict, checkpoint: Optional[
     return wrapper
 
 
-def load_tensorflow_model(file: str, name: str, params: dict, checkpoint: Optional[str]):
+def load_tensorflow_model(file: str, name: str, params: dict, checkpoint: Optional[str] = None):
     import tensorflow as tf
 
     class TensorFlowModelWrapper(tf.keras.Model):

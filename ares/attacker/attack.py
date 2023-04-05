@@ -9,7 +9,7 @@ from ares.defender import Classifier
 
 
 class Attack:
-    def __init__(self, type: str, name: str, params: dict, epsilon_constraint: Optional[dict]):
+    def __init__(self, type: str, name: str, params: dict, epsilon_constraint: Optional[dict] = None):
         self.type = type
         self.name = name
         self.params = params
