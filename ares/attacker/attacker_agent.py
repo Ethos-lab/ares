@@ -8,11 +8,19 @@ from ares.defender import Classifier
 
 
 class AttackerAgent:
-    def __init__(self, attacks: List[Attack], probabilities: List[float], evasion_probability: Optional[float]):
+    def __init__(
+        self,
+        attacks: List[Attack],
+        probabilities: List[float],
+        evasion_probability: Optional[float] = None,
+        evasion_turns: Optional[int] = None,
+    ):
         self.num_steps = 0
         self.attacks = attacks
         self.probabilities = probabilities
         self.evasion_probability = evasion_probability
+        self.evasion_turns = evasion_turns
+        self.evade_counts = 0
         self.num_attacks = len(attacks)
         self.index = 0
         self.active_attack = self.attacks[self.index]
@@ -29,6 +37,14 @@ class AttackerAgent:
         if self.evasion_probability is not None:
             p = np.random.rand()
             return p < self.evasion_probability
+        elif self.evasion_turns is not None:
+            if self.evade_counts >= self.evasion_turns:
+                self.evade_counts = 0
+                return False
+            else:
+                self.evade_counts += 1
+                return True
+
         return False
 
     def attack(self, classifier: Classifier, x: np.ndarray, y: np.ndarray) -> Tuple[np.ndarray, float, bool]:

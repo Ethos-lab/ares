@@ -34,8 +34,14 @@ def get_attacker_agent(config: dict) -> AttackerAgent:
         probabilities = np.array(probabilities) / np.sum(probabilities)
 
     evasion_probability = config["attacker"].get("evasion_probability", None)
+    evasion_turns = config["attacker"].get("evasion_turns", None)
 
-    attacker_agent = AttackerAgent(attacks, probabilities, evasion_probability)
+    attacker_agent = AttackerAgent(
+        attacks=attacks,
+        probabilities=probabilities,
+        evasion_probability=evasion_probability,
+        evasion_turns=evasion_turns,
+    )
     return attacker_agent
 
 
@@ -54,8 +60,8 @@ def get_defender_agent(config: dict) -> DefenderAgent:
             file=model_file,
             name=model_name,
             params=model_params,
-            checkpoint=model_checkpoint,
             dataset_params=config["scenario"]["dataset"],
+            checkpoint=model_checkpoint,
         )
         classifiers.append(classifier)
 
@@ -82,7 +88,7 @@ def get_defender_agent(config: dict) -> DefenderAgent:
     else:
         detector = None
 
-    defender_agent = DefenderAgent(classifiers, probabilities, detector)
+    defender_agent = DefenderAgent(classifiers=classifiers, probabilities=probabilities, detector=detector)
     return defender_agent
 
 
@@ -91,7 +97,7 @@ def get_evaluation_scenario(config: dict) -> EvaluationScenario:
     max_rounds = config["scenario"]["max_rounds"]
     dataset = config["scenario"]["dataset"]
 
-    execution_scenario = EvaluationScenario(num_episodes, max_rounds, dataset)
+    execution_scenario = EvaluationScenario(num_episodes=num_episodes, max_rounds=max_rounds, dataset=dataset)
     return execution_scenario
 
 

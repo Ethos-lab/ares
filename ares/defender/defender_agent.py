@@ -8,7 +8,9 @@ if TYPE_CHECKING:
 
 
 class DefenderAgent:
-    def __init__(self, classifiers: List["Classifier"], probabilities: List[float], detector: Optional["Detector"]):
+    def __init__(
+        self, classifiers: List["Classifier"], probabilities: List[float], detector: Optional["Detector"] = None
+    ):
         self.classifiers = classifiers
         self.probabilities = probabilities
         self.num_classifiers = len(classifiers)
