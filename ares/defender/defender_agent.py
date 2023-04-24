@@ -23,6 +23,10 @@ class DefenderAgent:
     def update_policy(self, observation: dict):
         pass
 
+    def reset(self):
+        if self.detector:
+            self.detector.reset()
+
     def current_defense(self) -> str:
         return self.active_classifier.name
 

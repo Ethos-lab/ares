@@ -31,6 +31,9 @@ class AresEnvironment(gym.Env):
         self.queries = 0
         self.reward = 0
 
+        self.attacker.reset()
+        self.defender.reset()
+
         x, y = self.scenario.get_valid_sample(self.defender.classifiers)
         observation = {
             "x": x,
