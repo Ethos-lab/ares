@@ -30,6 +30,9 @@ class AttackerAgent:
     def update_policy(self, observation: dict):
         pass
 
+    def reset(self):
+        pass
+
     def current_attack(self) -> str:
         return self.active_attack.name
 
